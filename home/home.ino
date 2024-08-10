@@ -1,17 +1,10 @@
-// Button widget demo, requires SPI display with touch screen
-
-// Requires widget library here:
-// https://github.com/Bodmer/TFT_eWidget
 #include <Bonezegei_DS1307.h>
-
 #include <FS.h>
-#include "Free_Fonts.h" // Include the header file attached to this sketch
+#include "Free_Fonts.h" 
+#include <TFT_eSPI.h>              
+#include <TFT_eWidget.h>           
 
-#include <TFT_eSPI.h>              // Hardware-specific library
-#include <TFT_eWidget.h>           // Widget library
-
-TFT_eSPI tft = TFT_eSPI();         // Invoke custom library
-
+TFT_eSPI tft = TFT_eSPI();        
 #define CALIBRATION_FILE "/TouchCalData1"
 #define REPEAT_CAL false
 
