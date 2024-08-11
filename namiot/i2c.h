@@ -32,3 +32,13 @@ bool I2Cwrite(uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C, uint8_t VALUE_I2C){
   else
     return false; 
 }
+
+void I2Cread2(uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C1, uint8_t REGISTER_I2C2, uint8_t *buf, uint8_t bytesToReceive){
+  Wire.beginTransmission(ADDRESS_I2C);
+  Wire.write(REGISTER_I2C1);
+  Wire.write(REGISTER_I2C2);
+  Wire.endTransmission();
+  delay(20);
+  Wire.requestFrom(ADDRESS_I2C, bytesToReceive);
+  Wire.readBytes(buf, bytesToReceive);
+}

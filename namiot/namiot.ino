@@ -1,6 +1,7 @@
 #include "i2c.h"
 #include "TSL2591.h"
 #include "SHT41.h"
+#include "SHT31.h"
 
 void setup() {
   Serial.begin(9600);
@@ -9,11 +10,13 @@ void setup() {
 }
 
 void loop() {
-  uint8_t id = TSLreadID();
-  uint32_t lux = TSLreadLux();
-  Serial.println(id);
-  Serial.println(lux);
+  Serial.printf("Lux TSL2591: %f\n", TSLreadLux());
+  SHT41measurment();
+  SHT31heaterEnable();
+  delay(500);
+  SHT31heaterDisable();
+  delay(5000);
+  SHT31measurment();
   Serial.println();
-  SHTmeasurment();
   delay(2000);
 }

@@ -15,6 +15,11 @@
 
 #define TSL2591_COMMAND_BIT 0xA0
 
+#define TSL2591_LUX_DF (408.0F)   ///< Lux cooefficient
+#define TSL2591_LUX_COEFB (1.64F) ///< CH0 coefficient
+#define TSL2591_LUX_COEFC (0.59F) ///< CH1 coefficient A
+#define TSL2591_LUX_COEFD (0.86F) ///< CH2 coefficient B
+
 //uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C, uint8_t VALUE_I2C
 //I2Cread(uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C, uint8_t *buf, bytestorecei)
 //gain tsl.setGain(TSL2591_GAIN_MED); 0x10
@@ -42,7 +47,7 @@ uint8_t TSLreadID(){
 	return buf;
 }
 
-uint32_t TSLreadLux(){
+float TSLreadLux(){
   //TSLenable();
   delay(500);
   uint8_t ch0[2];
@@ -53,10 +58,18 @@ uint32_t TSLreadLux(){
   
   uint16_t y = (ch0[1] << 8 | ch0[0]);
   uint32_t x = (ch1[1] << 8 | ch1[0]);
-
   x <<= 16;
   x |= y;
+
+  //integration time 300, gain medium 25.0
+  float divider = (300.0 * 25.0) / TSL2591_LUX_DF;
+
+  uint16_t lum = x & 0xFFFF;
+  uint16_t ir = x>> 16;
+
+  float lux = (((float)lum - (float)ir)) * (1.0F - ((float)ir / (float)lum)) / divider;
+
   //TSLdisable();
   
-  return x;
+  return lux;
 }

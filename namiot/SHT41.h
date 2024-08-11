@@ -4,7 +4,7 @@
 #define MED_PREC_MEAS 0xF6
 #define SERIAL_NUM 0x89
 
-void SHTmeasurment(){
+void SHT41measurment(){
   uint8_t buf[6];
   I2Cread(SHT41_ADRESS, MED_PREC_MEAS, buf, 6);
 
