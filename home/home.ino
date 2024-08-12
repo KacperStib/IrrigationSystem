@@ -24,27 +24,17 @@ uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
 void btnL_pressAction(void)
 {
   if (btnL.justPressed()) {
-    Serial.println("Left button just pressed");
-    btnL.drawSmoothButton(true);
+    btnL.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
+    Serial.print("Button toggled: ");
+    if (btnL.getState()) Serial.println("ON");
+    else  Serial.println("OFF");
+    btnR.setPressTime(millis());
   }
 }
 
 void btnL_releaseAction(void)
 {
-  static uint32_t waitTime = 1000;
-  if (btnL.justReleased()) {
-    Serial.println("Left button just released");
-    btnL.drawSmoothButton(false);
-    btnL.setReleaseTime(millis());
-    waitTime = 10000;
-  }
-  else {
-    if (millis() - btnL.getReleaseTime() >= waitTime) {
-      waitTime = 1000;
-      btnL.setReleaseTime(millis());
-      btnL.drawSmoothButton(!btnL.getState());
-    }
-  }
+ //do nothing
 }
 
 void btnR_pressAction(void)
@@ -72,9 +62,9 @@ void btnR_releaseAction(void)
 void initButtons() {
   uint16_t x = (tft.width() - BUTTON_W) / 2;
   uint16_t y = tft.height() / 2 - BUTTON_H - 10;
-  btnL.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_RED, TFT_BLACK, "Button", 1);
+  btnL.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_RED, TFT_BLACK, "OFF", 1);
   btnL.setPressAction(btnL_pressAction);
-  btnL.setReleaseAction(btnL_releaseAction);
+  //btnL.setReleaseAction(btnL_releaseAction);
   btnL.drawSmoothButton(false, 3, TFT_BLACK); // 3 is outline width, TFT_BLACK is the surrounding background colour for anti-aliasing
 
   y = tft.height() / 2 + 10;
@@ -82,6 +72,34 @@ void initButtons() {
   btnR.setPressAction(btnR_pressAction);
   //btnR.setReleaseAction(btnR_releaseAction);
   btnR.drawSmoothButton(false, 3, TFT_BLACK); // 3 is outline width, TFT_BLACK is the surrounding background colour for anti-aliasing
+}
+
+void printTime(){
+  if (millis() - printTime >= 1000) {
+    printTime = millis();
+    if (rtc.getTime()) {
+      Serial.printf("Time %02d:%02d:%02d ", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
+      if (rtc.getFormat() == 12) {  // returns 12 or 24 hour format
+        if (rtc.getAMPM()) {  //return 0 = AM  1 = PM
+          Serial.print("PM  ");
+        } else {
+          Serial.print("AM  ");
+        }
+      }
+    }
+    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), rtc.getYear());
+ 
+
+  tft.setCursor(0, 0, 2);
+  tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);
+  char buf[20];
+  
+  sprintf(buf, "%02d:%02", rtc.getHour(), rtc.getMinute());
+  tft.print("Time: "); tft.print(buf);
+
+  sprintf(buf, "%02d-%02d-%d", rtc.getMonth(), rtc.getDate(), rtc.getYear());
+  tft.print("Date: "); tft.print(buf); 
+  }
 }
 
 void setup() {
@@ -126,23 +144,6 @@ void loop() {
       }
     }
   }
-if (millis() - printTime >= 1000) {
-  printTime = millis();
-  if (rtc.getTime()) {
-    Serial.printf("Time %02d:%02d:%02d ", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
-
-    if (rtc.getFormat() == 12) {  // returns 12 or 24 hour format
-
-      if (rtc.getAMPM()) {  //return 0 = AM  1 = PM
-        Serial.print("PM  ");
-      } else {
-        Serial.print("AM  ");
-      }
-    }
-  }
-    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), rtc.getYear());
-  }
-
 }
 
 void touch_calibrate()
