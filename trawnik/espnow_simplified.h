@@ -24,8 +24,6 @@ typedef struct msgTrawnik {
 msg message;
 
 uint8_t device1[] = {0xB0, 0xA7, 0x32, 0x81, 0xEC, 0x78};
-uint8_t device2[] = {0xD4, 0xD4, 0xDA, 0x5E, 0x22, 0x5C};
-uint8_t device3[] = {0x84, 0xCC, 0xA8, 0x47, 0x9D, 0x7C};
 
 void espnow_init(){
   WiFi.mode(WIFI_STA);
@@ -33,7 +31,6 @@ void espnow_init(){
     Serial.println("ESP-NOW Init Failed");
     return;
   }
-  
   esp_now_register_recv_cb(OnDataRecv);
 }
 
