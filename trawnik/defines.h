@@ -1,8 +1,8 @@
-#define VALVE1
-#define VALVE2
-#define VALVE3
-#define VALVE4
-#define RAIN_SENSOR
+#define VALVE1 10
+#define VALVE2 9
+#define VALVE3 8
+#define VALVE4 7
+#define RAIN_SENSOR 1
 
 //in minutes
 #define WATERING_TIME 10

@@ -24,9 +24,11 @@ typedef struct msgTrawnik {
 msgTrawnik msg;
 
 uint8_t panel[] = {0x40, 0x4C, 0xCA, 0xF5, 0xA1, 0x94};
+uint8_t trawnik[] = {0x64, 0xE8, 0x33, 0x88, 0x2F, 0x3C};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
   memcpy(&msg, incomingData, sizeof(msg));
+  //wateringCmd = msg.onOff;
 }
 
 void espnow_init(){

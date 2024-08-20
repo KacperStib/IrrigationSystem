@@ -2,13 +2,13 @@
 #include <FS.h>
 #include "Free_Fonts.h" 
 #include <TFT_eSPI.h>              
-#include <TFT_eWidget.h>           
+#include <TFT_eWidget.h>  
+#include "espnow_simplified.h"         
 
 TFT_eSPI tft = TFT_eSPI();        
 #define CALIBRATION_FILE "/TouchCalData1"
 #define REPEAT_CAL false
 
-ButtonWidget btnL = ButtonWidget(&tft);
 ButtonWidget btnR = ButtonWidget(&tft);
 
 Bonezegei_DS1307 rtc(0x68);
@@ -18,33 +18,29 @@ Bonezegei_DS1307 rtc(0x68);
 
 // Create an array of button instances to use in for() loops
 // This is more useful where large numbers of buttons are employed
-ButtonWidget* btn[] = {&btnL , &btnR};;
+ButtonWidget* btn[] = {&btnR};;
 uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
-
-void btnL_pressAction(void)
-{
-  if (btnL.justPressed()) {
-    btnL.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
-    Serial.print("Button toggled: ");
-    if (btnL.getState()) Serial.println("ON");
-    else  Serial.println("OFF");
-    btnR.setPressTime(millis());
-  }
-}
-
-void btnL_releaseAction(void)
-{
- //do nothing
-}
+bool cmd = 0;
 
 void btnR_pressAction(void)
 {
   if (btnR.justPressed()) {
     btnR.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
     Serial.print("Button toggled: ");
-    if (btnR.getState()) Serial.println("ON");
-    else  Serial.println("OFF");
+    if (btnR.getState()){
+      Serial.println("ON");
+      cmd = 1;
+    }
+    else{
+      cmd = 0;
+      Serial.println("OFF");
+    }
     btnR.setPressTime(millis());
+
+    msg.onOff = cmd;
+    sendCommand(trawnik, msg);
+    tft.setCursor(0, 160, 2);
+    tft.print("espnow: "); tft.print(cmd);
   }
 
   // if button pressed for more than 1 sec...
@@ -62,10 +58,6 @@ void btnR_releaseAction(void)
 void initButtons() {
   uint16_t x = (tft.width() - BUTTON_W) / 2;
   uint16_t y = tft.height() / 2 - BUTTON_H - 10;
-  btnL.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_RED, TFT_BLACK, "OFF", 1);
-  btnL.setPressAction(btnL_pressAction);
-  //btnL.setReleaseAction(btnL_releaseAction);
-  btnL.drawSmoothButton(false, 3, TFT_BLACK); // 3 is outline width, TFT_BLACK is the surrounding background colour for anti-aliasing
 
   y = tft.height() / 2 + 10;
   btnR.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_BLACK, TFT_GREEN, "OFF", 1);
@@ -74,8 +66,9 @@ void initButtons() {
   btnR.drawSmoothButton(false, 3, TFT_BLACK); // 3 is outline width, TFT_BLACK is the surrounding background colour for anti-aliasing
 }
 
-void printTime(){
-  if (millis() - printTime >= 1000) {
+void printT(){
+  static uint32_t printTime = millis();
+  if ((millis() - printTime) >= 1000) {
     printTime = millis();
     if (rtc.getTime()) {
       Serial.printf("Time %02d:%02d:%02d ", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
@@ -94,9 +87,10 @@ void printTime(){
   tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);
   char buf[20];
   
-  sprintf(buf, "%02d:%02", rtc.getHour(), rtc.getMinute());
+  sprintf(buf, "%02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
   tft.print("Time: "); tft.print(buf);
 
+  tft.setCursor(160, 0, 2);
   sprintf(buf, "%02d-%02d-%d", rtc.getMonth(), rtc.getDate(), rtc.getYear());
   tft.print("Date: "); tft.print(buf); 
   }
@@ -118,14 +112,17 @@ void setup() {
   rtc.setAMPM(1);           //Set AM or PM    0 = AM  1 =PM
   rtc.setTime("11:59:30");  //Set Time    Hour:Minute:Seconds
   rtc.setDate("1/27/24");
+
+  espnow_init();
+  addPeer(trawnik);
 }
 
 void loop() {
   static uint32_t scanTime = millis();
-  static uint32_t printTime = millis();
 
   uint16_t t_x = 9999, t_y = 9999; // To store the touch coordinates
 
+  printT();
   // Scan keys every 50ms at most
   if (millis() - scanTime >= 50) {
     // Pressed will be set true if there is a valid touch on the screen
