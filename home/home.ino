@@ -1,4 +1,4 @@
-#include <Bonezegei_DS1307.h>
+ #include <Bonezegei_DS1307.h>
 #include <FS.h>
 #include "Free_Fonts.h" 
 #include <TFT_eSPI.h>              
@@ -10,7 +10,7 @@ TFT_eSPI tft = TFT_eSPI();
 #define REPEAT_CAL false
 
 ButtonWidget btnR = ButtonWidget(&tft);
-
+ButtonWidget btnN = ButtonWidget(&tft);
 Bonezegei_DS1307 rtc(0x68);
 
 #define BUTTON_W 100
@@ -18,7 +18,7 @@ Bonezegei_DS1307 rtc(0x68);
 
 // Create an array of button instances to use in for() loops
 // This is more useful where large numbers of buttons are employed
-ButtonWidget* btn[] = {&btnR};;
+ButtonWidget* btn[] = {&btnR, &btnN};;
 uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
 bool cmd = 0;
 
@@ -37,8 +37,8 @@ void btnR_pressAction(void)
     }
     btnR.setPressTime(millis());
 
-    msg.onOff = cmd;
-    sendCommand(trawnik, msg);
+    msgT.onOff = cmd;
+    sendCommand(trawnik, msgT);
     tft.setCursor(0, 160, 2);
     tft.print("espnow: "); tft.print(cmd);
   }
@@ -55,9 +55,40 @@ void btnR_releaseAction(void)
   // Not action
 }
 
+void btnN_pressAction(void)
+{
+  if (btnN.justPressed()) {
+    btnN.drawSmoothButton(!btnN.getState(), 3, TFT_BLACK, btnN.getState() ? "OFF" : "ON");
+    Serial.print("Button toggled: ");
+    if (btnN.getState()){
+      Serial.println("ON");
+    }
+    else{
+      Serial.println("OFF");
+    }
+    btnN.setPressTime(millis());
+  }
+
+  // if button pressed for more than 1 sec...
+  if (millis() - btnN.getPressTime() >= 1000) {
+    Serial.println("Stop pressing my buttton.......");
+  }
+  else Serial.println("Right button is being pressed");
+}
+
+void btnN_releaseAction(void)
+{
+  // Not action
+}
+
 void initButtons() {
   uint16_t x = (tft.width() - BUTTON_W) / 2;
   uint16_t y = tft.height() / 2 - BUTTON_H - 10;
+
+  btnN.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_BLACK, TFT_GREEN, "OFF", 1);
+  btnN.setPressAction(btnN_pressAction);
+  //btnR.setReleaseAction(btnR_releaseAction);
+  btnN.drawSmoothButton(false, 3, TFT_BLACK); // 3 is outline width, TFT_BLACK is the surrounding background colour for anti-aliasing
 
   y = tft.height() / 2 + 10;
   btnR.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_BLACK, TFT_GREEN, "OFF", 1);
@@ -85,7 +116,7 @@ void printT(){
 
   tft.setCursor(0, 0, 2);
   tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);
-  char buf[20];
+  char buf[50];
   
   sprintf(buf, "%02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
   tft.print("Time: "); tft.print(buf);
@@ -93,6 +124,13 @@ void printT(){
   tft.setCursor(160, 0, 2);
   sprintf(buf, "%02d-%02d-%d", rtc.getMonth(), rtc.getDate(), rtc.getYear());
   tft.print("Date: "); tft.print(buf); 
+
+  if(newN == 1){
+    tft.setCursor(0, 400, 2);
+    sprintf(buf, "Lux: %02f Temp: %02f", msgN.lux, msgN.tempOutside);
+    tft.print(buf);
+    newN = 0;
+  }
   }
 }
 

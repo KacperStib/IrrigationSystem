@@ -1,6 +1,8 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
+bool newN = 0;
+
 typedef struct msgNamiot {
   float lux;
   float tempInside;
@@ -22,19 +24,19 @@ typedef struct msgTrawnik {
 };
 
 msgTrawnik msgT;
-msgNamiot msgN
+msgNamiot msgN;
 
 uint8_t panel[] = {0x40, 0x4C, 0xCA, 0xF5, 0xA1, 0x94};
 uint8_t trawnik[] = {0x64, 0xE8, 0x33, 0x88, 0x2F, 0x3C};
 uint8_t namiot[] = {0x64, 0xE8, 0x33, 0x88, 0x0B, 0x04};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
-  if(*mac_addr == trawnik[])
+  if(memcmp(mac_addr, trawnik, sizeof(trawnik)) == 0)
     memcpy(&msgT, incomingData, sizeof(msgT));
-  else if(*mac_addr == namiot[])
+  else if(memcmp(mac_addr, namiot, sizeof(namiot)) == 0){
     memcpy(&msgN, incomingData, sizeof(msgN));
-  
-  
+    newN = 1;
+  }
 }
 
 void espnow_init(){
