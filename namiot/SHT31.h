@@ -48,8 +48,8 @@ void SHT31measurment(float* T, float* RH){
 
   float t = (uint16_t)buf[0] * 256 + (uint16_t)buf[1];
   float rh = (uint16_t)buf[3] * 256 + (uint16_t)buf[4];
-  float T = -45 + 175 * t / 65535;
-  float RH = 100 * rh / 65535;
+  *T = -45 + 175 * t / 65535;
+  *RH = 100 * rh / 65535;
 
   //Serial.printf("Temperature SHT31: %f\n", T);
   //Serial.printf("RH SHT31: %f %\n", RH);
