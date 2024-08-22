@@ -115,6 +115,7 @@ void setup() {
 
   espnow_init();
   addPeer(trawnik);
+  addPeer(namiot);
 }
 
 void loop() {

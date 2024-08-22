@@ -33,7 +33,7 @@ void SHT31heaterDisable(){
   I2Cwrite(SHT31_ADRESS, cmd[0], cmd[1]);
 }
 
-void SHT31measurment(){
+void SHT31measurment(float* T, float* RH){
   uint8_t buf[6];
   uint8_t cmd[2];
   uint16_t command = SHT31_MEAS_HIGHREP;
@@ -51,6 +51,6 @@ void SHT31measurment(){
   float T = -45 + 175 * t / 65535;
   float RH = 100 * rh / 65535;
 
-  Serial.printf("Temperature SHT31: %f\n", T);
-  Serial.printf("RH SHT31: %f %\n", RH);
+  //Serial.printf("Temperature SHT31: %f\n", T);
+  //Serial.printf("RH SHT31: %f %\n", RH);
 }
