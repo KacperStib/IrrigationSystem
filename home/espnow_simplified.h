@@ -36,7 +36,7 @@ uint8_t namiot[] = {0x64, 0xE8, 0x33, 0x88, 0x0B, 0x04};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
   if(memcmp(mac_addr, trawnik, sizeof(trawnik)) == 0)
-    memcpy(&msgTRx, incomingData, sizeof(msgT));
+    memcpy(&msgTRx, incomingData, sizeof(msgTRx));
   else if(memcmp(mac_addr, namiot, sizeof(namiot)) == 0){
     memcpy(&msgN, incomingData, sizeof(msgN));
     newN = 1;
