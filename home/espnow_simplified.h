@@ -17,13 +17,17 @@ typedef struct msgNamiot {
   bool seqEnd;
 };
 
-typedef struct msgTrawnik {
+typedef struct msgTrawnikTx {
   bool onOff;
+};
+
+typedef struct msgTrawnikRx {
   bool isRain;
   bool seqEnd;
 };
 
-msgTrawnik msgT;
+msgTrawnikRx msgTRx;
+msgTrawnikTx msgTTx;
 msgNamiot msgN;
 
 uint8_t panel[] = {0x40, 0x4C, 0xCA, 0xF5, 0xA1, 0x94};
@@ -32,7 +36,7 @@ uint8_t namiot[] = {0x64, 0xE8, 0x33, 0x88, 0x0B, 0x04};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
   if(memcmp(mac_addr, trawnik, sizeof(trawnik)) == 0)
-    memcpy(&msgT, incomingData, sizeof(msgT));
+    memcpy(&msgTRx, incomingData, sizeof(msgT));
   else if(memcmp(mac_addr, namiot, sizeof(namiot)) == 0){
     memcpy(&msgN, incomingData, sizeof(msgN));
     newN = 1;
@@ -57,7 +61,7 @@ void addPeer(uint8_t device[]){
   esp_now_add_peer(&peerInfo);
 }
 
-void sendCommand(uint8_t* device, struct msgTrawnik commandData) {
+void sendCommand(uint8_t* device, struct msgTrawnikTx commandData) {
   esp_now_send(device, (uint8_t *)&commandData, sizeof(commandData));
 }
 
