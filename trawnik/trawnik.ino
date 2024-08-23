@@ -30,12 +30,13 @@ void setup() {
 void loop() {
 
   if(isRain){
-    //espnow send timestamp;
+    msgTx.isRain = isRain;
+    sendCommand(panel, msgTx);
     lastRain = millis();
     isRain = 0;
   }
 
-  wateringCmd = msg.onOff;
+  wateringCmd = msgRx.onOff;
   Serial.println(wateringCmd);
   if(wateringCmd /*&& millis() - lastRain() >= RAIN_DELAY * 1000 * 60*/){
     wateringSequence();
