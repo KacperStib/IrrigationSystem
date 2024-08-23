@@ -1,32 +1,22 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-typedef struct msgNamiot {
-  float lux;
-  float tempInside;
-  float rhInside;
-  float tempOutside;
-  float rhOutside;
-  uint8_t waterLvl;
-  uint8_t probe1;
-  uint8_t probe2;
-  uint8_t probe3;
+typedef struct msgTrawnikRx {
   bool onOff;
-  bool seqEnd;
 };
 
-typedef struct msgTrawnik {
-  bool onOff;
+typedef struct msgTrawnikTx {
   bool isRain;
   bool seqEnd;
 };
 
-msgTrawnik msg;
+msgTrawnikRx msgRx;
+msgTrawnikTx msgTx;
 
 uint8_t panel[] = {0x40, 0x4C, 0xCA, 0xF5, 0xA1, 0x94};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
-  memcpy(&msg, incomingData, sizeof(msg));
+  memcpy(&msgRx, incomingData, sizeof(msgRx));
 }
 
 void espnow_init(){
@@ -47,7 +37,7 @@ void addPeer(uint8_t device[]){
   esp_now_add_peer(&peerInfo);
 }
 
-void sendCommand(uint8_t* device, struct msgTrawnik commandData) {
+void sendCommand(uint8_t* device, struct msgTrawnikTx commandData) {
   esp_now_send(device, (uint8_t *)&commandData, sizeof(commandData));
 }
 
