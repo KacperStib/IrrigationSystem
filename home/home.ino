@@ -112,7 +112,6 @@ void printT(){
       }
     }
     Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), rtc.getYear());
- 
 
   tft.setCursor(0, 0, 2);
   tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);
@@ -142,13 +141,22 @@ buf[50];
    sprintf(buf, "Last Grass Watering: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
    tft.print(buf);
   }
-  
  newT = 0;
-
+ }
+ 
   if(newN){
-    tft.setCursor(0, 400, 2);
-    sprintf(buf, "Lux: %02f Temp: %02f", msgN.lux, msgN.tempOutside);
+    tft.setCursor(0, 300, 2);
+    sprintf(buf, "Lux: %02f", msgN.lux);
     tft.print(buf);
+
+    tft.setCursor(0, 350, 2);
+    sprintf(buf, "Inside:   Temp: %02f RH: %02f", msgN.tempOutside, msgN.rhOutside);
+    tft.print(buf);
+
+    tft.setCursor(0, 400, 2);
+    sprintfbuf, "Outside:   Temp: %02f RH: %02f", msgN.tempInside, msgN.rhInside);
+    tft.print(buf);
+   
     newN = 0;
   }
 }
@@ -181,6 +189,7 @@ void loop() {
   uint16_t t_x = 9999, t_y = 9999; // To store the touch coordinates
 
   printT();
+ checkMsgs();
   // Scan keys every 50ms at most
   if (millis() - scanTime >= 50) {
     // Pressed will be set true if there is a valid touch on the screen
