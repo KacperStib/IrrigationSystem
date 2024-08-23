@@ -37,8 +37,8 @@ void btnR_pressAction(void)
     }
     btnR.setPressTime(millis());
 
-    msgT.onOff = cmd;
-    sendCommand(trawnik, msgT);
+    msgTTx.onOff = cmd;
+    sendCommand(trawnik, msgTTx);
     tft.setCursor(0, 160, 2);
     tft.print("espnow: "); tft.print(cmd);
   }
@@ -124,13 +124,32 @@ void printT(){
   tft.setCursor(160, 0, 2);
   sprintf(buf, "%02d-%02d-%d", rtc.getMonth(), rtc.getDate(), rtc.getYear());
   tft.print("Date: "); tft.print(buf); 
+  }
+}
 
-  if(newN == 1){
+void checkMsgs(){
+buf[50];
+
+ if(newTRx){
+  if(msgTRx.isRain){
+   tft.setCursor(0, 50, 2);
+   sprintf(buf, "Last Rain: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
+   tft.print(buf);
+  }
+
+  if(msgTRx.seqEnd){
+   tft.setCursor(160, 50, 2);
+   sprintf(buf, "Last Grass Watering: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
+   tft.print(buf);
+  }
+  
+ newT = 0;
+
+  if(newN){
     tft.setCursor(0, 400, 2);
     sprintf(buf, "Lux: %02f Temp: %02f", msgN.lux, msgN.tempOutside);
     tft.print(buf);
     newN = 0;
-  }
   }
 }
 
