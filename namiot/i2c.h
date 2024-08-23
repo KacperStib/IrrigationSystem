@@ -42,3 +42,35 @@ void I2Cread2(uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C1, uint8_t REGISTER_I2C2,
   Wire.requestFrom(ADDRESS_I2C, bytesToReceive);
   Wire.readBytes(buf, bytesToReceive);
 }
+
+//to change
+/*
+bool I2Cwrite(uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C, uint8_t VALUE_I2C){
+  Wire.beginTransmission(ADDRESS_I2C);
+  Wire.write(REGISTER_I2C);
+  Wire.write(VALUE_I2C);
+  if (Wire.endTransmission() == 0)
+    return true;
+  else
+    return false; 
+}
+
+bool I2Cwrite(uint8_t ADDRESS_I2C, uint16_t CMD){
+  uint8_t cmd[2];
+  cmd[0] = CMD >> 8;
+  cmd[1] = CMD & 0xFF;
+
+  Wire.beginTransmission(ADDRESS_I2C);
+  Wire.write(cmd[0]);
+  Wire.write(cmd[1]);
+  if (Wire.endTransmission() == 0)
+    return true;
+  else
+    return false; 
+}
+
+void I2Cread(uint8_t ADDRESS_I2C, uint8_t REGISTER_I2C, uint8_t *buf, uint8_t bytesToReceive) {
+  Wire.requestFrom(ADDRESS_I2C, bytesToReceive);
+  Wire.readBytes(buf, bytesToReceive);
+}
+*/
