@@ -2,6 +2,7 @@
 #include <WiFi.h>
 
 bool newN = 0;
+bool newT = 0;
 
 typedef struct msgNamiot {
   float lux;
@@ -35,8 +36,10 @@ uint8_t trawnik[] = {0x64, 0xE8, 0x33, 0x88, 0x2F, 0x3C};
 uint8_t namiot[] = {0x64, 0xE8, 0x33, 0x88, 0x0B, 0x04};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
-  if(memcmp(mac_addr, trawnik, sizeof(trawnik)) == 0)
+  if(memcmp(mac_addr, trawnik, sizeof(trawnik)) == 0){
     memcpy(&msgTRx, incomingData, sizeof(msgTRx));
+    newT = 1;
+  }
   else if(memcmp(mac_addr, namiot, sizeof(namiot)) == 0){
     memcpy(&msgN, incomingData, sizeof(msgN));
     newN = 1;
