@@ -13,7 +13,7 @@ typedef struct msgTrawnikTx {
 msgTrawnikRx msgRx;
 msgTrawnikTx msgTx;
 
-uint8_t panel[] = {0x40, 0x4C, 0xCA, 0xF5, 0xA1, 0x94};
+uint8_t panel[] = {0x34, 0xB7, 0xDA, 0xF8, 0xC1, 0xC8};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
   memcpy(&msgRx, incomingData, sizeof(msgRx));

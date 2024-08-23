@@ -16,6 +16,7 @@ void setup() {
   pinMode(VALVE2, OUTPUT);
   pinMode(VALVE3, OUTPUT);
   pinMode(VALVE4, OUTPUT);
+  pinMode(RAIN_SENSOR, INPUT);
 
   digitalWrite(VALVE1, HIGH);
   digitalWrite(VALVE2, HIGH);
@@ -25,6 +26,8 @@ void setup() {
   Serial.begin(115200);
   espnow_init();
   addPeer(panel);
+
+  attachInterrupt(RAIN_SENSOR, rain, RISING);
 }
 
 void loop() {
@@ -34,6 +37,7 @@ void loop() {
     sendCommand(panel, msgTx);
     lastRain = millis();
     isRain = 0;
+    msgTx.isRain = isRain;
   }
 
   wateringCmd = msgRx.onOff;
@@ -58,4 +62,7 @@ void wateringSequence(){
   openValve(VALVE2);
   openValve(VALVE3);
   openValve(VALVE4);
+  msgTx.seqEnd = 1;
+  sendCommand(panel, msgTx);
+  msgTx.seqEnd = 0;
 }

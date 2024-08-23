@@ -3,7 +3,8 @@
 #include "Free_Fonts.h" 
 #include <TFT_eSPI.h>              
 #include <TFT_eWidget.h>  
-#include "espnow_simplified.h"         
+#include "espnow_simplified.h"    
+#include"CompileTime.h"     
 
 TFT_eSPI tft = TFT_eSPI();        
 #define CALIBRATION_FILE "/TouchCalData1"
@@ -21,6 +22,7 @@ Bonezegei_DS1307 rtc(0x68);
 ButtonWidget* btn[] = {&btnR, &btnN};;
 uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
 bool cmd = 0;
+char buf[50];
 
 void btnR_pressAction(void)
 {
@@ -101,7 +103,6 @@ void printT(){
 
   tft.setCursor(0, 0, 2);
   tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);
-  char buf[50];
   
   sprintf(buf, "%02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
   tft.print("Time: "); tft.print(buf);
@@ -113,41 +114,54 @@ void printT(){
 }
 
 void checkMsgs(){
-buf[50];
 
- if(newTRx){
+ if(newT){
   if(msgTRx.isRain){
-   tft.setCursor(0, 50, 2);
+   tft.setCursor(0, 60, 2);
    sprintf(buf, "Last Rain: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
    tft.print(buf);
   }
 
   if(msgTRx.seqEnd){
-   tft.setCursor(160, 50, 2);
+   tft.setCursor(0, 80, 2);
    sprintf(buf, "Last Grass Watering: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
    tft.print(buf);
   }
- newT = 0;
+
+  newT = 0;
  }
  
   if(newN){
-    tft.setCursor(0, 300, 2);
+    tft.setCursor(0, 340, 2);
     sprintf(buf, "Lux: %02f", msgN.lux);
     tft.print(buf);
 
-    tft.setCursor(0, 350, 2);
+    tft.setCursor(0, 360, 2);
     sprintf(buf, "Inside:   Temp: %02f RH: %02f", msgN.tempOutside, msgN.rhOutside);
     tft.print(buf);
 
-    tft.setCursor(0, 400, 2);
-    sprintfbuf, "Outside:   Temp: %02f RH: %02f", msgN.tempInside, msgN.rhInside);
+    tft.setCursor(0, 380, 2);
+    sprintf(buf, "Outside:   Temp: %02f RH: %02f", msgN.tempInside, msgN.rhInside);
     tft.print(buf);
    
     newN = 0;
   }
 }
 
+void setRTC(){
+  using namespace CompileTime;
+  
+  rtc.begin();
+  rtc.setFormat(24);        //Set 12 Hours Format
+  //rtc.setAMPM(1);           //Set AM or PM    0 = AM  1 =PM
+  sprintf(buf, "%02d:%02d:%02d", hour, minute, second);
+  rtc.setTime(buf);  //Set Time    Hour:Minute:Seconds
+  sprintf(buf, "%02d/%02d/%d", month, day, year);
+  rtc.setDate(buf);
+}
+
 void setup() {
+  CompileTime::setCompileTime(6);
   Serial.begin(115200);
   tft.begin();
   tft.setRotation(0);
@@ -157,13 +171,7 @@ void setup() {
   // Calibrate the touch screen and retrieve the scaling factors
   touch_calibrate();
   initButtons();
-
-  rtc.begin();
-  rtc.setFormat(12);        //Set 12 Hours Format
-  rtc.setAMPM(1);           //Set AM or PM    0 = AM  1 =PM
-  rtc.setTime("11:59:30");  //Set Time    Hour:Minute:Seconds
-  rtc.setDate("1/27/24");
-
+  setRTC();
   espnow_init();
   addPeer(trawnik);
   addPeer(namiot);
