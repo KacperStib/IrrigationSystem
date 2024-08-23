@@ -26,14 +26,12 @@ void btnR_pressAction(void)
 {
   if (btnR.justPressed()) {
     btnR.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
-    Serial.print("Button toggled: ");
+    
     if (btnR.getState()){
-      Serial.println("ON");
       cmd = 1;
     }
     else{
       cmd = 0;
-      Serial.println("OFF");
     }
     btnR.setPressTime(millis());
 
@@ -42,12 +40,6 @@ void btnR_pressAction(void)
     tft.setCursor(0, 160, 2);
     tft.print("espnow: "); tft.print(cmd);
   }
-
-  // if button pressed for more than 1 sec...
-  if (millis() - btnR.getPressTime() >= 1000) {
-    Serial.println("Stop pressing my buttton.......");
-  }
-  else Serial.println("Right button is being pressed");
 }
 
 void btnR_releaseAction(void)
@@ -59,7 +51,7 @@ void btnN_pressAction(void)
 {
   if (btnN.justPressed()) {
     btnN.drawSmoothButton(!btnN.getState(), 3, TFT_BLACK, btnN.getState() ? "OFF" : "ON");
-    Serial.print("Button toggled: ");
+    
     if (btnN.getState()){
       Serial.println("ON");
     }
@@ -68,12 +60,6 @@ void btnN_pressAction(void)
     }
     btnN.setPressTime(millis());
   }
-
-  // if button pressed for more than 1 sec...
-  if (millis() - btnN.getPressTime() >= 1000) {
-    Serial.println("Stop pressing my buttton.......");
-  }
-  else Serial.println("Right button is being pressed");
 }
 
 void btnN_releaseAction(void)
