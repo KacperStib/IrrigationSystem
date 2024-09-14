@@ -21,7 +21,8 @@ Bonezegei_DS1307 rtc(0x68);
 // This is more useful where large numbers of buttons are employed
 ButtonWidget* btn[] = {&btnR, &btnN};;
 uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
-bool cmd = 0;
+bool cmdT = 0;
+bool cmdN = 0;
 char buf[50];
 
 void btnR_pressAction(void)
@@ -30,17 +31,17 @@ void btnR_pressAction(void)
     btnR.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
     
     if (btnR.getState()){
-      cmd = 1;
+      cmdT = 1;
     }
     else{
-      cmd = 0;
+      cmdT = 0;
     }
     btnR.setPressTime(millis());
 
-    msgTTx.onOff = cmd;
-    sendCommand(trawnik, msgTTx);
-    tft.setCursor(0, 160, 2);
-    tft.print("espnow: "); tft.print(cmd);
+    msgTTx.onOff = cmdT;
+    sendCommandT(trawnik, msgTTx);
+    //tft.setCursor(0, 160, 2);
+    //tft.print("espnow: "); tft.print(cmdT);
   }
 }
 
@@ -55,12 +56,17 @@ void btnN_pressAction(void)
     btnN.drawSmoothButton(!btnN.getState(), 3, TFT_BLACK, btnN.getState() ? "OFF" : "ON");
     
     if (btnN.getState()){
-      Serial.println("ON");
+      cmdN = 1;
     }
     else{
-      Serial.println("OFF");
+      cmdN = 0;
     }
     btnN.setPressTime(millis());
+
+    msgNTx.onOff = cmdN;
+    sendCommandN(namiot, msgNTx);
+    //tft.setCursor(0, 160, 2);
+    //tft.print("espnow2: "); tft.print(cmdN);
   }
 }
 
@@ -133,15 +139,15 @@ void checkMsgs(){
  
   if(newN){
     tft.setCursor(0, 340, 2);
-    sprintf(buf, "Lux: %02f", msgN.lux);
+    sprintf(buf, "Lux: %02f", msgNRx.lux);
     tft.print(buf);
 
     tft.setCursor(0, 360, 2);
-    sprintf(buf, "Inside:   Temp: %02f RH: %02f", msgN.tempOutside, msgN.rhOutside);
+    sprintf(buf, "Inside:   Temp: %02f RH: %02f", msgNRx.tempOutside, msgNRx.rhOutside);
     tft.print(buf);
 
     tft.setCursor(0, 380, 2);
-    sprintf(buf, "Outside:   Temp: %02f RH: %02f", msgN.tempInside, msgN.rhInside);
+    sprintf(buf, "Outside:   Temp: %02f RH: %02f", msgNRx.tempInside, msgNRx.rhInside);
     tft.print(buf);
    
     newN = 0;

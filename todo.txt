@@ -1,0 +1,5 @@
+- poprawić I2C
+- dodac freeRTOS
+- timestampy
+- sprawdzić odczyt z sond
+- więcej info na ekranie

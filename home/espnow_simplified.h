@@ -4,7 +4,11 @@
 bool newN = 0;
 bool newT = 0;
 
-typedef struct msgNamiot {
+typedef struct msgNamiotTx {
+  bool onOff;
+};
+
+typedef struct msgNamiotRx {
   float lux;
   float tempInside;
   float rhInside;
@@ -29,7 +33,8 @@ typedef struct msgTrawnikRx {
 
 msgTrawnikRx msgTRx;
 msgTrawnikTx msgTTx;
-msgNamiot msgN;
+msgNamiotRx msgNRx;
+msgNamiotTx msgNTx;
 
 uint8_t panel[] = {0x40, 0x4C, 0xCA, 0xF5, 0xA1, 0x94};
 uint8_t trawnik[] = {0x64, 0xE8, 0x33, 0x88, 0x2F, 0x3C};
@@ -41,7 +46,7 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
     newT = 1;
   }
   else if(memcmp(mac_addr, namiot, sizeof(namiot)) == 0){
-    memcpy(&msgN, incomingData, sizeof(msgN));
+    memcpy(&msgNRx, incomingData, sizeof(msgNRx));
     newN = 1;
   }
 }
@@ -64,7 +69,11 @@ void addPeer(uint8_t device[]){
   esp_now_add_peer(&peerInfo);
 }
 
-void sendCommand(uint8_t* device, struct msgTrawnikTx commandData) {
+void sendCommandT(uint8_t* device, struct msgTrawnikTx commandData) {
+  esp_now_send(device, (uint8_t *)&commandData, sizeof(commandData));
+}
+
+void sendCommandN(uint8_t* device, struct msgNamiotTx commandData) {
   esp_now_send(device, (uint8_t *)&commandData, sizeof(commandData));
 }
 

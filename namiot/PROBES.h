@@ -1,6 +1,6 @@
-#define PROBE1
-#define PROBE2
-#define PROBE3
+#define PROBE1 2
+#define PROBE2 1
+#define PROBE3 0
 
 float measurment(uint8_t PROBE){
   float meas = analogRead(PROBE);
