@@ -2,7 +2,7 @@
 
 bool newN = 0;
 bool newT = 0;
-bool newT = 0;
+bool cmdT = 0;
 bool cmdN = 0;
 
 msgTrawnikRx msgTRx;

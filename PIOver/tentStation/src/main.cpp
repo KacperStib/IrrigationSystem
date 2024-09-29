@@ -7,6 +7,15 @@
 float lux, tIn, rhIn, tOut, rhOut;
 bool wateringCmd = 0;
 
+void wateringSequence(){
+  digitalWrite(4, 1);
+  delay(5000);
+  digitalWrite(4, 0);
+  msgTx.seqEnd = 1;
+  sendCommand(panel, msgTx);
+  msgTx.seqEnd = 0;
+}
+
 void setup() {
   Serial.begin(9600);
   I2Cinit();
@@ -47,8 +56,3 @@ void loop() {
   delay(2000);
 }
 
-void wateringSequence(){
-  digitalWrite(4, 1);
-  delay(5000);
-  digitalWrite(4, 0);
-}

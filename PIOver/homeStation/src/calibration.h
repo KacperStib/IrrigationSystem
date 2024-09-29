@@ -15,7 +15,7 @@ extern TFT_eSPI tft;
 extern ButtonWidget btnR;
 extern ButtonWidget btnN;
 
-extern ButtonWidget* btn[];
+extern ButtonWidget* btn[2];
 extern uint8_t buttonCount;
 
 void touch_calibrate();

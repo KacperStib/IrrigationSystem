@@ -1,10 +1,7 @@
 #include "clock.h"
 
-TFT_eSPI tft = TFT_eSPI();
-ButtonWidget btnR = ButtonWidget(&tft);
-ButtonWidget btnN = ButtonWidget(&tft);
-ButtonWidget* btn[] = {&btnR, &btnN};;
-uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
+Bonezegei_DS1307 rtc(0x68);
+char buf[50];
 
 void setRTC(){
   using namespace CompileTime;

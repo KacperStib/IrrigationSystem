@@ -1,20 +1,20 @@
 #include "HCSR04.h"
 
-void HCSR04init{
+void HCSR04init(){
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
 }
 
 uint8_t distance(){
 
-  digitalWrite(Trig, LOW);
+  digitalWrite(TRIG, LOW);
   delayMicroseconds(2);
-  digitalWrite(Trig, HIGH);
+  digitalWrite(TRIG, HIGH);
   delayMicroseconds(10);
  
-  digitalWrite(Trig, LOW);
-  float EchoTime = pulseIn(Echo, HIGH);
+  digitalWrite(TRIG, LOW);
+  float EchoTime = pulseIn(ECHO, HIGH);
   float Distance = EchoTime / 58;
 
-  return distance;
+  return (uint8_t)Distance;
 }

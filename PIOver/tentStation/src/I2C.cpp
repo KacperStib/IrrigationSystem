@@ -1,10 +1,12 @@
 #include "I2C.h"
 
-void I2Cinit(){
+bool I2Cinit(){
   if(Wire.begin(I2C_SLAVE_SDA_PIN, I2C_SLAVE_SCL_PIN, 400000) == true)
-    Serial.println("I2C init OK");
+    //Serial.println("I2C init OK");
+    return true;
   else 
-    Serial.println("I2C INIT ERROR");
+    return false;
+    //Serial.println("I2C INIT ERROR");
 }
 
 //uint8_t data[10]; // Adjust size as needed

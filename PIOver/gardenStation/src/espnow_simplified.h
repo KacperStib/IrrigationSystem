@@ -1,10 +1,10 @@
 #include <Arduino.h>
 
-typedef struct msgTrawnikRx {
+struct msgTrawnikRx {
   bool onOff;
 };
 
-typedef struct msgTrawnikTx {
+struct msgTrawnikTx {
   bool isRain;
   bool seqEnd;
 };

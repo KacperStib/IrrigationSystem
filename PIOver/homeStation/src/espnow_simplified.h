@@ -3,16 +3,19 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
+#ifndef ESPNOW_SIMPLIFIED_H
+#define ESPNOW_SIMPLIFIED_H
+
 extern bool newN;
 extern bool newT;
 extern bool cmdT;
 extern bool cmdN;
 
-typedef struct msgNamiotTx {
+struct msgNamiotTx {
   bool onOff;
 };
 
-typedef struct msgNamiotRx {
+struct msgNamiotRx {
   float lux;
   float tempInside;
   float rhInside;
@@ -26,11 +29,11 @@ typedef struct msgNamiotRx {
   bool seqEnd;
 };
 
-typedef struct msgTrawnikTx {
+struct msgTrawnikTx {
   bool onOff;
 };
 
-typedef struct msgTrawnikRx {
+struct msgTrawnikRx {
   bool isRain;
   bool seqEnd;
 };
@@ -49,3 +52,5 @@ void espnow_init();
 void addPeer(uint8_t device[]);
 void sendCommandT(uint8_t* device, struct msgTrawnikTx commandData);
 void sendCommandN(uint8_t* device, struct msgNamiotTx commandData);
+
+#endif

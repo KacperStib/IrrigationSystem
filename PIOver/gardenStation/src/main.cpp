@@ -16,8 +16,8 @@ void IRAM_ATTR rain(){
 void openValve(uint8_t VALVE){
   lastMillis = millis();
   digitalWrite(VALVE, LOW);
-  while(millis() - lastMillis <= WATERING_TIME * 100 * 6){ //ma byc 1000 * 60
-    delay(5000);
+  while(millis() - lastMillis <= WATERING_TIME * 100){ //ma byc 1000 * 60
+    delay(1000);
   }
   digitalWrite(VALVE, HIGH);
 }

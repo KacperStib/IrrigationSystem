@@ -1,11 +1,11 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-typedef struct msgNamiotRx {
+struct msgNamiotRx {
   bool onOff;
 };
 
-typedef struct msgNamiotTx {
+struct msgNamiotTx {
   float lux;
   float tempInside;
   float rhInside;
@@ -19,10 +19,10 @@ typedef struct msgNamiotTx {
   bool seqEnd;
 };
 
-msgNamiotRx msgRx;
-msgNamiotTx msgTx;
+extern msgNamiotRx msgRx;
+extern msgNamiotTx msgTx;
 
-uint8_t panel[] = {0x34, 0xB7, 0xDA, 0xF8, 0xC1, 0xC8};
+extern uint8_t panel[6];
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len);
 void espnow_init();

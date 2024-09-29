@@ -1,5 +1,11 @@
 #include "calibration.h"
 
+TFT_eSPI tft = TFT_eSPI();
+ButtonWidget btnR = ButtonWidget(&tft);
+ButtonWidget btnN = ButtonWidget(&tft);
+ButtonWidget* btn[2] = {&btnR, &btnN};;
+uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
+
 void touch_calibrate()
 {
   uint16_t calData[5];
@@ -71,15 +77,15 @@ void btnR_pressAction(void)
     btnR.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
     
     if (btnR.getState()){
-      cmdT = 1;
+      cmdN = 1;
     }
     else{
-      cmdT = 0;
+      cmdN = 0;
     }
     btnR.setPressTime(millis());
 
-    msgTTx.onOff = cmdT;
-    sendCommandT(trawnik, msgTTx);
+    msgNTx.onOff = cmdN;
+    sendCommandN(namiot, msgNTx);
     //tft.setCursor(0, 160, 2);
     //tft.print("espnow: "); tft.print(cmdT);
   }
@@ -96,15 +102,15 @@ void btnN_pressAction(void)
     btnN.drawSmoothButton(!btnN.getState(), 3, TFT_BLACK, btnN.getState() ? "OFF" : "ON");
     
     if (btnN.getState()){
-      cmdN = 1;
+      cmdT = 1;
     }
     else{
-      cmdN = 0;
+      cmdT = 0;
     }
     btnN.setPressTime(millis());
 
-    msgNTx.onOff = cmdN;
-    sendCommandN(namiot, msgNTx);
+    msgTTx.onOff = cmdT;
+    sendCommandT(trawnik, msgTTx);
     //tft.setCursor(0, 160, 2);
     //tft.print("espnow2: "); tft.print(cmdN);
   }
@@ -123,6 +129,8 @@ void initButtons() {
   btnN.setPressAction(btnN_pressAction);
   //btnR.setReleaseAction(btnR_releaseAction);
   btnN.drawSmoothButton(false, 3, TFT_BLACK); // 3 is outline width, TFT_BLACK is the surrounding background colour for anti-aliasing
+
+  tft.drawLine(0, tft.height() / 2, tft.width(), tft.height() / 2, TFT_WHITE);
 
   y = tft.height() / 2 + 10;
   btnR.initButtonUL(x, y, BUTTON_W, BUTTON_H, TFT_WHITE, TFT_BLACK, TFT_GREEN, "OFF", 1);

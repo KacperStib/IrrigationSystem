@@ -21,6 +21,13 @@ void checkMsgs(){
  }
  
   if(newN){
+
+    if(msgNRx.seqEnd){
+      tft.setCursor(0, 320, 2);
+      sprintf(buf, "Last Crops Watering: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
+      tft.print(buf);
+    }
+
     tft.setCursor(0, 340, 2);
     sprintf(buf, "Lux: %02f", msgNRx.lux);
     tft.print(buf);

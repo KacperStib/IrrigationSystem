@@ -3,8 +3,8 @@
 #include "CompileTime.h"  
 #include "calibration.h"
 
-Bonezegei_DS1307 rtc(0x68);
-char buf[50];
+extern Bonezegei_DS1307 rtc;
+extern char buf[50];
 
 void setRTC();
 void printT();
