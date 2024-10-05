@@ -44,7 +44,7 @@ void setup() {
   digitalWrite(VALVE3, HIGH);
   digitalWrite(VALVE4, HIGH);
   
-  Serial.begin(115200);
+  Serial.begin(9600);
   espnow_init();
   addPeer(panel);
 
