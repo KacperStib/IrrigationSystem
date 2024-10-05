@@ -1,35 +1,39 @@
 #include "SHT31.h"
 
 void SHT31heaterEnable(){
+  /*
   uint8_t cmd[2];
   uint16_t command = SHT31_HEATEREN;
-
   cmd[0] = command >> 8;
   cmd[1] = command & 0xFF; 
-
   I2Cwrite(SHT31_ADRESS, cmd[0], cmd[1]);
+  */
+ I2Cwrite2B(SHT31_ADRESS, SHT31_HEATEREN);
 }
 
 void SHT31heaterDisable(){
+  /*
   uint8_t cmd[2];
   uint16_t command = SHT31_HEATERDIS;
-
   cmd[0] = command >> 8;
   cmd[1] = command & 0xFF; 
-
   I2Cwrite(SHT31_ADRESS, cmd[0], cmd[1]);
+  */
+  I2Cwrite2B(SHT31_ADRESS, SHT31_HEATERDIS);
 }
 
 void SHT31measurment(float* T, float* RH){
   uint8_t buf[6];
+  /*
   uint8_t cmd[2];
   uint16_t command = SHT31_MEAS_HIGHREP;
-
   cmd[0] = command >> 8;
   cmd[1] = command & 0xFF; 
-
   I2Cread2(SHT31_ADRESS, cmd[0], cmd[1], buf, 6);
-
+  */
+  I2Cwrite2B(SHT31_ADRESS, SHT31_MEAS_HIGHREP);
+  delay(20);
+  I2Cread(SHT31_ADRESS, buf, 6);
   //for(int i = 0; i < 6 ; i++)
     //Serial.println(buf[i]);
 

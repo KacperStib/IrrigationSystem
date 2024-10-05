@@ -3,6 +3,17 @@
 Bonezegei_DS1307 rtc(0x68);
 char buf[50];
 
+/*
+void begin(){
+  I2Cinit();
+  I2CwriteREG(DS1307_ADRESS, DS1307_EN_REG);
+}
+
+void setFormat(uint8_t format, uint8_t AMPM){
+  I2CwriteVAL(DS1307_ADRESS, DS1307_SET_REG, format);
+}
+*/
+
 void setRTC(){
   using namespace CompileTime;
   

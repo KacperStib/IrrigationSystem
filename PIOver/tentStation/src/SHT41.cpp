@@ -2,7 +2,10 @@
 
 void SHT41measurment(float* T, float* RH){
   uint8_t buf[6];
-  I2Cread(SHT41_ADRESS, MED_PREC_MEAS, buf, 6);
+  I2CwriteREG(SHT41_ADRESS, MED_PREC_MEAS);
+  delay(10);
+  I2Cread(SHT41_ADRESS, buf, 6);
+  //I2Cread(SHT41_ADRESS, MED_PREC_MEAS, buf, 6);
 
   //for(int i = 0; i < 6 ; i++)
     //Serial.println(buf[i]);
