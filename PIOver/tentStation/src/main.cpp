@@ -18,7 +18,12 @@ void wateringSequence(){
 
 void setup() {
   Serial.begin(9600);
-  I2Cinit();
+  
+  if(!I2Cinit())
+    Serial.println("I2C init OK");
+  else
+    Serial.println("I2C INIT ERROR");
+
   TSLconfig();
   espnow_init();
   addPeer(panel);
