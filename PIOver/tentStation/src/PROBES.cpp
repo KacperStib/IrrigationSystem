@@ -1,8 +1,8 @@
 #include "PROBES.h"
 
 float measurement(uint8_t PROBE){
-  float meas = analogRead(PROBE);
-  float val = 100 - (meas * 100 / 3.3);
+  float meas = analogRead(PROBE) / 4095.0;
+  float val = 100 - (meas * 100);
   return val;
 }
 

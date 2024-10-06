@@ -1,5 +1,8 @@
 #include "HCSR04.h"
 
+//in centimeters
+uint8_t tankHeight = 100;
+
 void HCSR04init(){
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
@@ -13,8 +16,12 @@ uint8_t distance(){
   delayMicroseconds(10);
  
   digitalWrite(TRIG, LOW);
-  float EchoTime = pulseIn(ECHO, HIGH);
-  float Distance = EchoTime / 58;
+  int Distance = pulseIn(ECHO, HIGH) / 58;
 
   return (uint8_t)Distance;
+}
+
+uint8_t waterPercentage(){
+  float percent = (float) (100.0 - (float)distance() / tankHeight * 100.0);
+  return (uint8_t)percent;
 }

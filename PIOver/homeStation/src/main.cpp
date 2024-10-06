@@ -39,6 +39,14 @@ void checkMsgs(){
     tft.setCursor(0, 380, 2);
     sprintf(buf, "Outside:   Temp: %02f RH: %02f", msgNRx.tempInside, msgNRx.rhInside);
     tft.print(buf);
+    
+    tft.setCursor(0, 400, 2);
+    sprintf(buf, "PROBES: 1: %d, 2: %d, 3: %d", msgNRx.probe1, msgNRx.probe2, msgNRx.probe3);
+    tft.print(buf);
+
+    tft.setCursor(0, 420, 2);
+    sprintf(buf, "Water level: %d %", msgNRx.waterLvl);
+    tft.print(buf);
    
     newN = 0;
   }
