@@ -1,11 +1,9 @@
-#include <esp_now.h>
-#include <WiFi.h>
 #include "espnow_simplified.h"
 
 msgTrawnikRx msgRx;
 msgTrawnikTx msgTx;
 
-uint8_t panel[] = {0x34, 0xB7, 0xDA, 0xF8, 0xC1, 0xC8};
+uint8_t panel[6] = {0x34, 0xB7, 0xDA, 0xF8, 0xC1, 0xC8};
 
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
   memcpy(&msgRx, incomingData, sizeof(msgRx));
@@ -32,5 +30,3 @@ void addPeer(uint8_t device[]){
 void sendCommand(uint8_t* device, struct msgTrawnikTx commandData) {
   esp_now_send(device, (uint8_t *)&commandData, sizeof(commandData));
 }
-
-
