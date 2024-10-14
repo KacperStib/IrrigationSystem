@@ -2,6 +2,57 @@
 #include "calibration.h"
 #include "clock.h"
 
+void checkMsgs();
+
+void setup() {
+  CompileTime::setCompileTime(6);
+  Serial.begin(115200);
+
+  // initialize TFT screen
+  tft.begin();
+  tft.setRotation(0);
+  tft.fillScreen(TFT_BLACK);
+  touch_calibrate();
+  initButtons();
+
+  setRTC();
+
+  // initialize esp now and add peers
+  espnow_init();
+  addPeer(trawnik);
+  addPeer(namiot);
+}
+
+void loop() {
+  // adjust scan time on touch
+  static uint32_t scanTime = millis();
+
+  uint16_t t_x = 9999, t_y = 9999; // To store the touch coordinates
+
+  printT();
+  checkMsgs();
+
+  // Scan keys every 50ms at most
+  if (millis() - scanTime >= 50) {
+    bool pressed = tft.getTouch(&t_x, &t_y);
+    scanTime = millis();
+    
+    for (uint8_t b = 0; b < buttonCount; b++) {
+      if (pressed) {
+        if (btn[b]->contains(t_x, t_y)) {
+          btn[b]->press(true);
+          btn[b]->pressAction();
+        }
+      }
+      else {
+        btn[b]->press(false);
+        btn[b]->releaseAction();
+      }
+    }
+  }
+}
+
+// check if there are new msgs and display them
 void checkMsgs(){
 
  if(newT){
@@ -49,46 +100,5 @@ void checkMsgs(){
     tft.print(buf);
    
     newN = 0;
-  }
-}
-
-void setup() {
-  CompileTime::setCompileTime(6);
-  Serial.begin(115200);
-  tft.begin();
-  tft.setRotation(0);
-  tft.fillScreen(TFT_BLACK);
-  touch_calibrate();
-  initButtons();
-  setRTC();
-  espnow_init();
-  addPeer(trawnik);
-  addPeer(namiot);
-}
-
-void loop() {
-  static uint32_t scanTime = millis();
-
-  uint16_t t_x = 9999, t_y = 9999; // To store the touch coordinates
-
-  printT();
-  checkMsgs();
-
-  // Scan keys every 50ms at most
-  if (millis() - scanTime >= 50) {
-    bool pressed = tft.getTouch(&t_x, &t_y);
-    scanTime = millis();
-    for (uint8_t b = 0; b < buttonCount; b++) {
-      if (pressed) {
-        if (btn[b]->contains(t_x, t_y)) {
-          btn[b]->press(true);
-          btn[b]->pressAction();
-        }
-      }
-      else {
-        btn[b]->press(false);
-        btn[b]->releaseAction();
-      }
-    }
   }
 }

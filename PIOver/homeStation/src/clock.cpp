@@ -3,6 +3,7 @@
 Bonezegei_DS1307 rtc(0x68);
 char buf[50];
 
+// try to run clock on registers instead of libaray
 /*
 void begin(){
   I2Cinit();
@@ -14,6 +15,7 @@ void setFormat(uint8_t format, uint8_t AMPM){
 }
 */
 
+// set RTC based on CompileTime if RTC has to be adjust
 void setRTC(){
   using namespace CompileTime;
   
@@ -26,6 +28,7 @@ void setRTC(){
   rtc.setDate(buf);
 }
 
+// print time in serialport and on screen
 void printT(){
   static uint32_t printTime = millis();
   if ((millis() - printTime) >= 1000) {

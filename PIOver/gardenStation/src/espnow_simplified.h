@@ -1,6 +1,7 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
+// esp now msgs
 struct msgTrawnikRx {
   bool onOff;
 };

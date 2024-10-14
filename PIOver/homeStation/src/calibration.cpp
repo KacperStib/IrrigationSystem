@@ -6,6 +6,7 @@ ButtonWidget btnN = ButtonWidget(&tft);
 ButtonWidget* btn[2] = {&btnR, &btnN};;
 uint8_t buttonCount = sizeof(btn) / sizeof(btn[0]);
 
+// calibrate touch and dimensions
 void touch_calibrate()
 {
   uint16_t calData[5];
@@ -71,6 +72,7 @@ void touch_calibrate()
   }
 }
 
+// actions on button(s) touch
 void btnR_pressAction(void)
 {
   if (btnR.justPressed()) {
@@ -121,6 +123,7 @@ void btnN_releaseAction(void)
   // Not action
 }
 
+// initialize buttons on screen
 void initButtons() {
   uint16_t x = (tft.width() - BUTTON_W) / 2;
   uint16_t y = tft.height() / 2 - BUTTON_H - 10;
