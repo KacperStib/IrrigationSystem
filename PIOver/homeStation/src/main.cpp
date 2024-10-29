@@ -2,6 +2,8 @@
 #include "calibration.h"
 #include "clock.h"
 
+uint8_t pageSelector = 0;
+
 void checkMsgs();
 
 void setup() {

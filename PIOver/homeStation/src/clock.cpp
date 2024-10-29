@@ -17,15 +17,15 @@ void setFormat(uint8_t format, uint8_t AMPM){
 
 // set RTC based on CompileTime if RTC has to be adjust
 void setRTC(){
-  using namespace CompileTime;
+  //using namespace CompileTime;
   
   rtc.begin();
   rtc.setFormat(24);        //Set 12 Hours Format
   //rtc.setAMPM(1);           //Set AM or PM    0 = AM  1 =PM
-  sprintf(buf, "%02d:%02d:%02d", hour, minute, second);
-  rtc.setTime(buf);  //Set Time    Hour:Minute:Seconds
-  sprintf(buf, "%02d/%02d/%d", month, day, year);
-  rtc.setDate(buf);
+  //sprintf(buf, "%02d:%02d:%02d", hour, minute, second);
+  //rtc.setTime(buf);  //Set Time    Hour:Minute:Seconds
+  //sprintf(buf, "%02d/%02d/%d", month, day, year);
+  //rtc.setDate(buf);
 }
 
 // print time in serialport and on screen
@@ -43,7 +43,7 @@ void printT(){
         }
       }
     }
-    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), rtc.getYear());
+    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), (uint16_t) rtc.getYear() + 2000);
 
   tft.setCursor(0, 0, 2);
   tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);

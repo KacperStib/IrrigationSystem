@@ -1,5 +1,7 @@
-- poprawić I2C
+- poprawić I2C +
 - dodac freeRTOS
-- timestampy
-- sprawdzić odczyt z sond
-- więcej info na ekranie
+- timestampy +
+- sprawdzić odczyt z sond +
+- więcej info na ekranie +
+
+"C:\Users\Janek\Dropbox\Studia\Sem6\KWPD"

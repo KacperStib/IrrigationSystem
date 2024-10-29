@@ -3,8 +3,10 @@
 #include "SHT41.h"
 #include "SHT31.h"
 #include "espnow_simplified.h"
+#include "HCSR04.h"
 
 float lux, tIn, rhIn, tOut, rhOut;
+uint8_t waterLvl;
 bool wateringCmd = 0;
 
 void setup() {
@@ -18,6 +20,7 @@ void setup() {
 }
 
 void loop() {
+  /*
   lux = TSLreadLux();
   Serial.printf("Lux TSL2591: %f\n", lux);
   msgTx.lux = lux;
@@ -35,6 +38,10 @@ void loop() {
   Serial.printf("SHT31: T: %f RH: %f\n\n", tOut, rhOut);
   msgTx.tempOutside = tOut;
   msgTx.rhOutside = rhOut;
+*/
+  waterLvl = waterPercentage();
+  Serial.printf("Distance: %d, Level: %d %\n", distance(), waterLvl);
+  msgTx.waterLvl = waterLvl;
 
   sendCommand(panel, msgTx);
 
