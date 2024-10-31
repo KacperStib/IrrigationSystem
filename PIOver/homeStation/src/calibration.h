@@ -1,26 +1,18 @@
 #include <Arduino.h>
 #include <FS.h>
+#include <LittleFS.h>
 #include <TFT_eSPI.h>
-#include <TFT_eWidget.h> 
+
+#include <lvgl.h>
+#include "ui.h"
 
 #include "espnow_simplified.h"
 
 #define CALIBRATION_FILE "/TouchCalData1"
 #define REPEAT_CAL false
-#define BUTTON_W 100
-#define BUTTON_H 50
 
 extern TFT_eSPI tft;        
 
-extern ButtonWidget btnR;
-extern ButtonWidget btnN;
-
-extern ButtonWidget* btn[2];
-extern uint8_t buttonCount;
-
-void touch_calibrate();
-void btnR_pressAction(void);
-void btnR_releaseAction(void);
-void btnN_pressAction(void);
-void btnN_releaseAction(void);
-void initButtons();
+void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p );
+void my_touchpad_read( lv_indev_drv_t * indev_drv, lv_indev_data_t * data );
+void init_lvgl();

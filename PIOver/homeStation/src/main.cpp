@@ -2,9 +2,8 @@
 #include "calibration.h"
 #include "clock.h"
 
-uint8_t pageSelector = 0;
-
 void checkMsgs();
+void checkCmds();
 
 void setup() {
   CompileTime::setCompileTime(6);
@@ -12,10 +11,10 @@ void setup() {
 
   // initialize TFT screen
   tft.begin();
-  tft.setRotation(0);
-  tft.fillScreen(TFT_BLACK);
-  touch_calibrate();
-  initButtons();
+  tft.setRotation(3);
+  uint16_t calData[5] = { 275, 3620, 264, 3532, 1 };
+  tft.setTouch( calData );
+  init_lvgl();
 
   setRTC();
 
@@ -25,82 +24,103 @@ void setup() {
   addPeer(namiot);
 }
 
-void loop() {
-  // adjust scan time on touch
-  static uint32_t scanTime = millis();
+int cnt = 0;
+int pres = 50;
 
-  uint16_t t_x = 9999, t_y = 9999; // To store the touch coordinates
+void loop() {
+
+  static uint32_t scanTime = millis();
 
   printT();
   checkMsgs();
-
-  // Scan keys every 50ms at most
-  if (millis() - scanTime >= 50) {
-    bool pressed = tft.getTouch(&t_x, &t_y);
-    scanTime = millis();
-    
-    for (uint8_t b = 0; b < buttonCount; b++) {
-      if (pressed) {
-        if (btn[b]->contains(t_x, t_y)) {
-          btn[b]->press(true);
-          btn[b]->pressAction();
-        }
-      }
-      else {
-        btn[b]->press(false);
-        btn[b]->releaseAction();
-      }
-    }
+  checkCmds();
+  //test
+  cnt++;
+  if(cnt==100){
+    sprintf(buf, "%d", pres);
+    lv_label_set_text(ui_Preasure, buf);
+    pres++; cnt = 0;
   }
+  // end test
+
+  lv_timer_handler(); /* let the GUI do its work */
+  delay( 20 );
 }
 
-// check if there are new msgs and display them
-void checkMsgs(){
 
+void checkMsgs(){
  if(newT){
+  /* TRAWNIK */
   if(msgTRx.isRain){
-   tft.setCursor(0, 60, 2);
-   sprintf(buf, "Last Rain: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
-   tft.print(buf);
+   sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
+   lv_label_set_text(ui_LastRain, buf);
   }
 
   if(msgTRx.seqEnd){
-   tft.setCursor(0, 80, 2);
-   sprintf(buf, "Last Grass Watering: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
-   tft.print(buf);
+   sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
+   lv_label_set_text(ui_LastWateringG, buf);
   }
-
+  /* TRAWNIK */
   newT = 0;
  }
  
   if(newN){
+    /* PANEL GLOWNY */
+    // temperatura zewn
+    sprintf(buf, "%.2f", msgNRx.tempOutside);
+    lv_label_set_text(ui_TempOut, buf);
+    // wilgotnosc zewn
+    sprintf(buf, "%.2f", msgNRx.rhOutside);
+    lv_label_set_text(ui_RHOut, buf);
+    // natezenie swiatla
+    sprintf(buf, "%.2f", msgNRx.lux);
+    lv_label_set_text(ui_Lux, buf);
+    /* PANEL GLOWNY */
 
+    /* NAMIOT */
+    // temperatura wenw
+    sprintf(buf, "%.2f", msgNRx.tempInside);
+    lv_label_set_text(ui_TempIn, buf);
+    // wilgotnosc wewn
+    sprintf(buf, "%.2f", msgNRx.rhInside);
+    lv_label_set_text(ui_RHIn, buf);
+    // poziom wody
+    sprintf(buf, "%d", msgNRx.waterLvl);
+    lv_label_set_text(ui_WaterLvl, buf);
+    lv_bar_set_value(ui_WaterLvlBar, msgNRx.waterLvl, LV_ANIM_OFF); // bar
+    // wilgotnosc gleby
+    sprintf(buf, " %d", msgNRx.probe2);
+    lv_label_set_text(ui_SoilMois, buf);
+    lv_bar_set_value(ui_SoilMoisBar, msgNRx.probe2, LV_ANIM_OFF); // bar
+    // ostatnie podlewanie
     if(msgNRx.seqEnd){
-      tft.setCursor(0, 320, 2);
-      sprintf(buf, "Last Crops Watering: %02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
-      tft.print(buf);
+      sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
+      lv_label_set_text(ui_LastWateringT, buf);
     }
-
-    tft.setCursor(0, 340, 2);
-    sprintf(buf, "Lux: %02f", msgNRx.lux);
-    tft.print(buf);
-
-    tft.setCursor(0, 360, 2);
-    sprintf(buf, "Inside:   Temp: %02f RH: %02f", msgNRx.tempOutside, msgNRx.rhOutside);
-    tft.print(buf);
-
-    tft.setCursor(0, 380, 2);
-    sprintf(buf, "Outside:   Temp: %02f RH: %02f", msgNRx.tempInside, msgNRx.rhInside);
-    tft.print(buf);
-    
-    tft.setCursor(0, 400, 2);
-    sprintf(buf, "PROBES: 1: %d, 2: %d, 3: %d", msgNRx.probe1, msgNRx.probe2, msgNRx.probe3);
-    tft.print(buf);
-
-    tft.setCursor(0, 420, 2);
-    sprintf(buf, "Water level: %d %", msgNRx.waterLvl);
-    tft.print(buf);
-   
+    /* NAMIOT */
     newN = 0;
   }
+}
+
+
+void checkCmds()
+{
+    switch(cmdToFunc){
+      case TENT_WATER_CMD:
+        cmdN = !cmdN;
+        msgNTx.onOff = cmdN;
+        sendCommandN(namiot, msgNTx);
+        cmdToFunc = 0;
+        break;
+
+      case GARDEN_WATER_CMD:
+        cmdT = !cmdT;
+        msgTTx.onOff = cmdT;
+        sendCommandT(trawnik, msgTTx);
+        cmdToFunc = 0;
+        break;
+
+      default:
+        break;
+    }
 }

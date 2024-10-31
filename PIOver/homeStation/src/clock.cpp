@@ -44,15 +44,12 @@ void printT(){
       }
     }
     Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), (uint16_t) rtc.getYear() + 2000);
-
-  tft.setCursor(0, 0, 2);
-  tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(1);
   
-  sprintf(buf, "%02d:%02d:%02d", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
-  tft.print("Time: "); tft.print(buf);
+  sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
+  lv_label_set_text(ui_Time, buf);
 
-  tft.setCursor(160, 0, 2);
-  sprintf(buf, "%02d-%02d-%d", rtc.getMonth(), rtc.getDate(), rtc.getYear());
-  tft.print("Date: "); tft.print(buf); 
+  sprintf(buf, "%02d . %02d . %d", rtc.getMonth(), rtc.getDate(), (uint16_t) rtc.getYear() + 1920);
+  lv_label_set_text(ui_Date, buf);
+  
   }
 }
