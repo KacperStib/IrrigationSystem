@@ -73,44 +73,10 @@ void init_lvgl(){
     ui_init();
 }
 
-/*
-void btnR_pressAction(void)
-{
-  if (btnR.justPressed()) {
-    btnR.drawSmoothButton(!btnR.getState(), 3, TFT_BLACK, btnR.getState() ? "OFF" : "ON");
-    
-    if (btnR.getState()){
-      cmdN = 1;
-    }
-    else{
-      cmdN = 0;
-    }
-    btnR.setPressTime(millis());
-
-    msgNTx.onOff = cmdN;
-    sendCommandN(namiot, msgNTx);
-    //tft.setCursor(0, 160, 2);
-    //tft.print("espnow: "); tft.print(cmdT);
-  }
+void init_tft(){
+  // initialize TFT screen
+  tft.begin();
+  tft.setRotation(3);
+  uint16_t calData[5] = { 275, 3620, 264, 3532, 1 };
+  tft.setTouch( calData );
 }
-
-void btnN_pressAction(void)
-{
-  if (btnN.justPressed()) {
-    btnN.drawSmoothButton(!btnN.getState(), 3, TFT_BLACK, btnN.getState() ? "OFF" : "ON");
-    
-    if (btnN.getState()){
-      cmdT = 1;
-    }
-    else{
-      cmdT = 0;
-    }
-    btnN.setPressTime(millis());
-
-    msgTTx.onOff = cmdT;
-    sendCommandT(trawnik, msgTTx);
-    //tft.setCursor(0, 160, 2);
-    //tft.print("espnow2: "); tft.print(cmdN);
-  }
-}
-*/

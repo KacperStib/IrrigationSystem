@@ -30,17 +30,20 @@ void loop() {
 
   // if rain detected send to panel and write timestamp
   if(isRain){
-    msgTx.isRain = isRain;
-    sendCommand(panel, msgTx);
-    lastRain = millis();
+    detachInterrupt(RAIN_SENSOR);
+    int read = analogRead(RAIN_SENSOR);
+    if (read > 2200){
+      msgTx.isRain = isRain;
+      sendCommand(panel, msgTx);
+      lastRain = millis();
+    }
     isRain = 0;
     msgTx.isRain = isRain;
   }
 
   // check if there are new msgs 
   wateringCmd = msgRx.onOff;
-  Serial.println(wateringCmd);
-  if(wateringCmd /*&& millis() - lastRain() >= RAIN_DELAY * 1000 * 60*/){
+  if (wateringCmd){
     wateringSequence();
   }
 

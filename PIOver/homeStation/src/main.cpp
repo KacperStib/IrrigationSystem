@@ -1,6 +1,7 @@
 #include "espnow_simplified.h"       
 #include "calibration.h"
 #include "clock.h"
+#include "wateringHandler.h"
 
 void checkMsgs();
 void checkCmds();
@@ -9,11 +10,7 @@ void setup() {
   CompileTime::setCompileTime(6);
   Serial.begin(115200);
 
-  // initialize TFT screen
-  tft.begin();
-  tft.setRotation(3);
-  uint16_t calData[5] = { 275, 3620, 264, 3532, 1 };
-  tft.setTouch( calData );
+  init_tft();
   init_lvgl();
 
   setRTC();
@@ -31,9 +28,11 @@ void loop() {
 
   static uint32_t scanTime = millis();
 
-  printT();
+  printTime();
   checkMsgs();
   checkCmds();
+  wateringHandler();
+
   //test
   cnt++;
   if(cnt==100){
@@ -112,12 +111,20 @@ void checkCmds()
         sendCommandN(namiot, msgNTx);
         cmdToFunc = 0;
         break;
+      
+      case TENT_AUT_CMD:
+        autoTent = !autoTent;
+        break;
 
       case GARDEN_WATER_CMD:
         cmdT = !cmdT;
         msgTTx.onOff = cmdT;
         sendCommandT(trawnik, msgTTx);
         cmdToFunc = 0;
+        break;
+
+      case GARDEN_AUT_CMD:
+        autoGarden = !autoGarden;
         break;
 
       default:

@@ -5,6 +5,7 @@
 
 #include "ui.h"
 #include "ui_helpers.h"
+
 ///////////////////// VARIABLES ////////////////////
 
 
@@ -127,7 +128,7 @@ void ui_event_GardenAut(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        checkCmdsGUI(GARDEN_AUT_CMD);
+        _ui_state_modify(ui_GardenAut, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
     }
 }
 
@@ -136,7 +137,7 @@ void ui_event_cmdG(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        checkCmdsGUI(GARDEN_WATER_CMD);
+        _ui_state_modify(ui_cmdG, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
     }
 }
 
@@ -154,7 +155,7 @@ void ui_event_TentAut(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        checkCmdsGUI(TENT_AUT_CMD);
+        _ui_state_modify(ui_TentAut, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
     }
 }
 
@@ -163,7 +164,7 @@ void ui_event_cmdT(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        checkCmdsGUI(TENT_WATER_CMD);
+        checkCmds(e);
     }
 }
 

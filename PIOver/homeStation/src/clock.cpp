@@ -29,7 +29,7 @@ void setRTC(){
 }
 
 // print time in serialport and on screen
-void printT(){
+void printTime(){
   static uint32_t printTime = millis();
   if ((millis() - printTime) >= 1000) {
     printTime = millis();
@@ -50,6 +50,5 @@ void printT(){
 
   sprintf(buf, "%02d . %02d . %d", rtc.getMonth(), rtc.getDate(), (uint16_t) rtc.getYear() + 1920);
   lv_label_set_text(ui_Date, buf);
-  
   }
 }

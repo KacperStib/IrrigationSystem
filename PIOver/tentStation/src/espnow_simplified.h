@@ -3,6 +3,7 @@
 
 struct msgNamiotRx {
   bool onOff;
+  bool autom;
 };
 
 struct msgNamiotTx {

@@ -9,7 +9,9 @@
 #define VALVE 4
 
 float lux, tIn, rhIn, tOut, rhOut, p1, p2, p3, waterLvl;
-bool wateringCmd = 0;
+bool wateringCmd = false;
+bool watering_en = false;
+bool automation = false;
 
 void wateringSequence();
 
@@ -76,19 +78,31 @@ void loop() {
 
   // assign received command to local variable
   wateringCmd = msgRx.onOff;
-  //Serial.println(wateringCmd);
-  if(wateringCmd /*&& millis() - lastRain() >= RAIN_DELAY * 1000 * 60*/){
-    wateringSequence();
+  if (wateringCmd && !watering_en){
+    digitalWrite(VALVE, HIGH);
+    watering_en = true;
   }
+  else if (!wateringCmd && watering_en){
+    digitalWrite(VALVE, LOW);
+    watering_en = false;
+    msgTx.seqEnd = true;
+    sendCommand(panel, msgTx);
+    msgTx.seqEnd = false;
+  }
+
+  // check if auto
+  automation = msgRx.autom;
+  if(automation)
+    wateringSequence();
 
   delay(2000);
 }
 
 void wateringSequence(){
-  digitalWrite(VALVE, 1);
+  digitalWrite(VALVE, HIGH);
   delay(5000);
-  digitalWrite(VALVE, 0);
-  msgTx.seqEnd = 1;
+  digitalWrite(VALVE, LOW);
+  msgTx.seqEnd = true;
   sendCommand(panel, msgTx);
-  msgTx.seqEnd = 0;
+  msgTx.seqEnd = false;
 }

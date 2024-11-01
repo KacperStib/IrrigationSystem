@@ -13,6 +13,7 @@ extern bool cmdN;
 
 struct msgNamiotTx {
   bool onOff;
+  bool autom;
 };
 
 struct msgNamiotRx {
