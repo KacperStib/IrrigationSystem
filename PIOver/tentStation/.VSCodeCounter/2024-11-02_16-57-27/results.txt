@@ -1,0 +1,41 @@
+Date : 2024-11-02 16:57:27
+Directory : c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src
+Total : 17 files,  340 codes, 71 comments, 101 blanks, all 512 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         17 |        340 |         71 |        101 |        512 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                     | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                        |         17 |        340 |         71 |        101 |        512 |
++------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                 | language | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\BMP.280.cpp           | C++      |          0 |          0 |          1 |          1 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\BMP280.h              | C++      |          0 |          0 |          1 |          1 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\HCSR04.cpp            | C++      |         19 |          4 |          8 |         31 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\HCSR04.h              | C++      |          7 |          0 |          3 |         10 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\I2C.cpp               | C++      |         40 |          5 |          7 |         52 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\I2C.h                 | C++      |          8 |          5 |          4 |         17 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\PROBES.cpp            | C++      |         13 |          3 |          5 |         21 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\PROBES.h              | C++      |          6 |          0 |          2 |          8 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\SHT31.cpp             | C++      |         17 |         12 |          6 |         35 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\SHT31.h               | C++      |         18 |          0 |          3 |         21 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\SHT41.cpp             | C++      |         11 |          9 |          4 |         24 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\SHT41.h               | C++      |          7 |          0 |          3 |         10 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\TSL2591.cpp           | C++      |         38 |         15 |         16 |         69 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\TSL2591.h             | C++      |         24 |          0 |          7 |         31 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\espnow_simplified.cpp | C++      |         24 |          1 |          7 |         32 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\espnow_simplified.h   | C++      |         27 |          0 |          5 |         32 |
+| c:\Users\Janek\Desktop\inz\ArduinoPrototype\PIOver\tentStation\src\main.cpp              | C++      |         81 |         17 |         19 |        117 |
+| Total                                                                                    |          |        340 |         71 |        101 |        512 |
++------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

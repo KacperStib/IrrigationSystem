@@ -29,6 +29,7 @@ lv_obj_t * ui_Lux;
 lv_obj_t * ui_Preasure;
 lv_obj_t * ui_Time;
 lv_obj_t * ui_Date;
+lv_obj_t * ui_Error;
 // CUSTOM VARIABLES
 lv_obj_t * uic_TempOut;
 
@@ -51,6 +52,10 @@ lv_obj_t * ui_cmdG;
 lv_obj_t * ui_LastWateringG;
 lv_obj_t * ui_LastRain;
 lv_obj_t * ui_RainFall;
+void ui_event_section(lv_event_t * e);
+lv_obj_t * ui_section;
+void ui_event_timeGarden(lv_event_t * e);
+lv_obj_t * ui_timeGarden;
 // CUSTOM VARIABLES
 
 
@@ -78,6 +83,8 @@ void ui_event_cmdT(lv_event_t * e);
 lv_obj_t * ui_cmdT;
 lv_obj_t * ui_SoilMoisBar;
 lv_obj_t * ui_WaterLvlBar;
+void ui_event_timeTent(lv_event_t * e);
+lv_obj_t * ui_timeTent;
 // CUSTOM VARIABLES
 
 // EVENTS
@@ -128,7 +135,7 @@ void ui_event_GardenAut(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        _ui_state_modify(ui_GardenAut, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
+        checkCmds(e);
     }
 }
 
@@ -137,7 +144,25 @@ void ui_event_cmdG(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        _ui_state_modify(ui_cmdG, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
+        checkCmds(e);
+    }
+}
+
+void ui_event_section(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        scetionSelector(e);
+    }
+}
+
+void ui_event_timeGarden(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        timeSelector(e);
     }
 }
 
@@ -156,6 +181,7 @@ void ui_event_TentAut(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         _ui_state_modify(ui_TentAut, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
+        checkCmds(e);
     }
 }
 
@@ -165,6 +191,15 @@ void ui_event_cmdT(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         checkCmds(e);
+    }
+}
+
+void ui_event_timeTent(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        timeSelector(e);
     }
 }
 

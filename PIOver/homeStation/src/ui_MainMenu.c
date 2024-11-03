@@ -137,6 +137,16 @@ void ui_MainMenu_screen_init(void)
     lv_obj_set_style_text_align(ui_Date, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_Date, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    ui_Error = lv_label_create(ui_MainMenu);
+    lv_obj_set_width(ui_Error, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Error, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Error, 0);
+    lv_obj_set_y(ui_Error, 30);
+    lv_obj_set_align(ui_Error, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Error, "");
+    lv_obj_set_style_text_color(ui_Error, lv_color_hex(0xC21919), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Error, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     lv_obj_add_event_cb(ui_GardenB, ui_event_GardenB, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_TentB, ui_event_TentB, LV_EVENT_ALL, NULL);
     uic_TempOut = ui_TempOut;

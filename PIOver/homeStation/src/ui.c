@@ -5,6 +5,7 @@
 
 #include "ui.h"
 #include "ui_helpers.h"
+
 ///////////////////// VARIABLES ////////////////////
 
 
@@ -28,6 +29,7 @@ lv_obj_t * ui_Lux;
 lv_obj_t * ui_Preasure;
 lv_obj_t * ui_Time;
 lv_obj_t * ui_Date;
+lv_obj_t * ui_Error;
 // CUSTOM VARIABLES
 lv_obj_t * uic_TempOut;
 
@@ -50,6 +52,10 @@ lv_obj_t * ui_cmdG;
 lv_obj_t * ui_LastWateringG;
 lv_obj_t * ui_LastRain;
 lv_obj_t * ui_RainFall;
+void ui_event_section(lv_event_t * e);
+lv_obj_t * ui_section;
+void ui_event_timeGarden(lv_event_t * e);
+lv_obj_t * ui_timeGarden;
 // CUSTOM VARIABLES
 
 
@@ -77,6 +83,8 @@ void ui_event_cmdT(lv_event_t * e);
 lv_obj_t * ui_cmdT;
 lv_obj_t * ui_SoilMoisBar;
 lv_obj_t * ui_WaterLvlBar;
+void ui_event_timeTent(lv_event_t * e);
+lv_obj_t * ui_timeTent;
 // CUSTOM VARIABLES
 
 // EVENTS
@@ -140,6 +148,26 @@ void ui_event_cmdG(lv_event_t * e)
     }
 }
 
+void ui_event_section(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        uint8_t mins = lv_dropdown_get_selected(ui_section);
+        scetionSelector(mins);
+    }
+}
+
+void ui_event_timeGarden(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        uint8_t mins = lv_dropdown_get_selected(ui_timeGarden);
+        timeSelector(mins, 1);
+    }
+}
+
 void ui_event_Button5(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -164,6 +192,16 @@ void ui_event_cmdT(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         checkCmdsGUI(TENT_WATER_CMD);
+    }
+}
+
+void ui_event_timeTent(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        uint8_t mins = lv_dropdown_get_selected(ui_timeTent);
+        timeSelector(mins, 2);
     }
 }
 

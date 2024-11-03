@@ -30,9 +30,9 @@ void setRTC(){
 
 // print time in serialport and on screen
 void printTime(){
-  static uint32_t printTime = millis();
-  if ((millis() - printTime) >= 1000) {
-    printTime = millis();
+  //static uint32_t printTime = millis();
+  //if ((millis() - printTime) >= 1000) {
+    //printTime = millis();
     if (rtc.getTime()) {
       Serial.printf("Time %02d:%02d:%02d ", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
       if (rtc.getFormat() == 12) {  // returns 12 or 24 hour format
@@ -43,12 +43,12 @@ void printTime(){
         }
       }
     }
-    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDate(), (uint16_t) rtc.getYear() + 2000);
+    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDay(), (uint16_t) rtc.getYear() + 2000);
   
   sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
   lv_label_set_text(ui_Time, buf);
 
-  sprintf(buf, "%02d . %02d . %d", rtc.getMonth(), rtc.getDate(), (uint16_t) rtc.getYear() + 1920);
+  sprintf(buf, "%02d . %02d . %d", rtc.getMonth(), rtc.getDay(), (uint16_t) rtc.getYear() + 1920);
   lv_label_set_text(ui_Date, buf);
-  }
+  //}
 }

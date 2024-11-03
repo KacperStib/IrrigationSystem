@@ -157,8 +157,20 @@ void ui_Tent_screen_init(void)
     lv_obj_set_y(ui_WaterLvlBar, -60);
     lv_obj_set_align(ui_WaterLvlBar, LV_ALIGN_CENTER);
 
+    ui_timeTent = lv_dropdown_create(ui_Tent);
+    lv_dropdown_set_options(ui_timeTent, "15 min\n20 min\n25 min\n30 min\n40 min\n50 min\n60 min");
+    lv_obj_set_width(ui_timeTent, 100);
+    lv_obj_set_height(ui_timeTent, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_timeTent, 150);
+    lv_obj_set_y(ui_timeTent, 90);
+    lv_obj_set_align(ui_timeTent, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_timeTent, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+
+
     lv_obj_add_event_cb(ui_Button5, ui_event_Button5, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_TentAut, ui_event_TentAut, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_cmdT, ui_event_cmdT, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_timeTent, ui_event_timeTent, LV_EVENT_ALL, NULL);
 
 }

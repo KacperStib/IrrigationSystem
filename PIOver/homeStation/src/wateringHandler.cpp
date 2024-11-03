@@ -1,25 +1,84 @@
 #include "wateringHandler.h"
-#include "clock.h"
 
+bool cmdN = false;
+bool cmdT = false;
 bool autoTent = false;
 bool autoGarden = false;
+bool sendTent = false;
+bool sendGarden = false;
 
-uint32_t millisTent = 0;
-uint32_t millisGarden = 0;
+uint8_t lastTentWatering[2] = {0, 0};
+uint8_t lastGardenWatering[2] = {0, 0};
+uint8_t lastRain[2] = {0, 0};
 
-void wateringHandler(){
-    if (autoTent){
-        if (rtc.getHour() == 8 || rtc.getHour() == 20 || msgNRx.probe1 < 50 || msgNRx.probe2 < 50 || msgNRx.probe3 < 50){
-            msgNTx.autom = true;
+void checkCmds()
+{
+    switch(cmdToFunc){
+      case TENT_WATER_CMD:
+        cmdN = !cmdN;
+        msgNTx.onOff = cmdN;
+        sendCommandN(namiot, msgNTx);
+        cmdToFunc = 0;
+        break;
+      
+      case TENT_AUT_CMD:
+        autoTent = !autoTent;
+        if (!autoTent){
+            msgNTx.autom = autoTent;
+            msgNTx.duration = tentMinutes;
             sendCommandN(namiot, msgNTx);
-            msgNTx.autom = false;
         }
-    }
+        cmdToFunc = 0;
+        break;
 
-    if (autoGarden){
-        if (rtc.getHour() == 8 || rtc.getHour() == 20){
-            msgTTx.onOff = true;
+      case GARDEN_WATER_CMD:
+        cmdT = !cmdT;
+        msgTTx.onOff = cmdT;
+        msgTTx.section = section;
+        sendCommandT(trawnik, msgTTx);
+        cmdToFunc = 0;
+        break;
+
+      case GARDEN_AUT_CMD:
+        autoGarden = !autoGarden;
+        if (!autoGarden){
+            msgTTx.autom = autoGarden;
+            msgTTx.duration = gardenMinutes;
             sendCommandT(trawnik, msgTTx);
         }
+        cmdToFunc = 0;
+        break;
+
+      default:
+        break;
     }
+}
+
+void autoCmdsSender(){
+    // tent automation
+    if (autoTent){
+        if (((rtc.getHour() == 16 || rtc.getHour() == 20) && (lastTentWatering[1] != rtc.getHour() || (lastTentWatering[0] != rtc.getDay() && lastTentWatering[1] == rtc.getHour()))) 
+            /*|| msgNRx.probe1 < 50 || msgNRx.probe2 < 50 || msgNRx.probe3 < 50*/){
+            sendTent = true;
+        }
+        if(sendTent){
+            msgNTx.autom = autoTent;
+            msgNTx.duration = tentMinutes;
+            sendCommandN(namiot, msgNTx);
+            sendTent = false;
+        }
+    } 
+
+    // garden automation
+    if (autoGarden){
+        if (((rtc.getHour() == 8 || rtc.getHour() == 20) && (lastGardenWatering[1] != rtc.getHour() || (lastGardenWatering[0] != rtc.getDay() && lastGardenWatering[1] == rtc.getHour())))){
+            sendGarden = true;
+        }
+        if(sendTent){
+            msgTTx.autom = autoGarden;
+            msgTTx.duration = gardenMinutes;
+            sendCommandT(trawnik, msgTTx);
+            sendGarden = false;
+        }
+    } 
 }

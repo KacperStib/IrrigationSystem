@@ -107,8 +107,32 @@ void ui_Garden_screen_init(void)
     lv_obj_set_align(ui_RainFall, LV_ALIGN_CENTER);
     lv_label_set_text(ui_RainFall, "");
 
+    ui_section = lv_dropdown_create(ui_Garden);
+    lv_dropdown_set_options(ui_section, "Sekcja 1\nSekcja 2\nSekcja 3\nSekcja 4");
+    lv_obj_set_width(ui_section, 100);
+    lv_obj_set_height(ui_section, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_section, -150);
+    lv_obj_set_y(ui_section, 90);
+    lv_obj_set_align(ui_section, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_section, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+
+
+    ui_timeGarden = lv_dropdown_create(ui_Garden);
+    lv_dropdown_set_options(ui_timeGarden, "15 min\n20 min\n25 min\n30 min\n40 min\n60min\n50 min\n60 min");
+    lv_obj_set_width(ui_timeGarden, 100);
+    lv_obj_set_height(ui_timeGarden, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_timeGarden, 150);
+    lv_obj_set_y(ui_timeGarden, 90);
+    lv_obj_set_align(ui_timeGarden, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_timeGarden, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+
+
     lv_obj_add_event_cb(ui_Button4, ui_event_Button4, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_GardenAut, ui_event_GardenAut, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_cmdG, ui_event_cmdG, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_section, ui_event_section, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_timeGarden, ui_event_timeGarden, LV_EVENT_ALL, NULL);
 
 }

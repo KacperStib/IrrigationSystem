@@ -11,6 +11,8 @@ extern "C" {
 #endif
 
 void checkCmds(lv_event_t * e);
+void scetionSelector(lv_event_t * e);
+void timeSelector(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

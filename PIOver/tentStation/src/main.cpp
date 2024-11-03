@@ -12,6 +12,8 @@ float lux, tIn, rhIn, tOut, rhOut, p1, p2, p3, waterLvl;
 bool wateringCmd = false;
 bool watering_en = false;
 bool automation = false;
+uint8_t duration = 0;
+uint32_t lastMillis = 0;
 
 void wateringSequence();
 
@@ -92,15 +94,22 @@ void loop() {
 
   // check if auto
   automation = msgRx.autom;
-  if(automation)
+  duration = msgRx.duration;
+  if(automation){
     wateringSequence();
+    automation = false;
+    msgRx.autom = false;
+  }
 
   delay(2000);
 }
 
 void wateringSequence(){
+  lastMillis = millis();
   digitalWrite(VALVE, HIGH);
-  delay(5000);
+  while(millis() - lastMillis <= duration * 100){
+    delay(1000);
+  }
   digitalWrite(VALVE, LOW);
   msgTx.seqEnd = true;
   sendCommand(panel, msgTx);

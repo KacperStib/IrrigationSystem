@@ -4,6 +4,9 @@
 // esp now msgs
 struct msgTrawnikRx {
   bool onOff;
+  uint8_t section;
+  bool autom;
+  uint8_t duration;
 };
 
 struct msgTrawnikTx {

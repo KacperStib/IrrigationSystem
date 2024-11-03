@@ -9,3 +9,13 @@ void checkCmds(lv_event_t * e)
 {
 	// Your code here
 }
+
+void scetionSelector(lv_event_t * e)
+{
+	// Your code here
+}
+
+void timeSelector(lv_event_t * e)
+{
+	// Your code here
+}

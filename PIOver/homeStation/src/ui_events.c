@@ -4,8 +4,52 @@
 // Project name: test
 
 #include "ui.h"
+
 uint8_t cmdToFunc = 0;
+uint8_t section = 1;
+uint8_t gardenMinutes = 30;
+uint8_t tentMinutes = 30
+;
 void checkCmdsGUI(uint8_t cmd)
 {
     cmdToFunc = cmd;
+}
+
+void scetionSelector(uint8_t sec)
+{
+	section = sec + 1;
+}
+
+void timeSelector(uint8_t mins, uint8_t dest)
+{
+	switch(mins){
+		case 0:
+			mins = 15;
+			break;
+		case 1:
+			mins = 20;
+			break;
+		case 2:
+			mins = 25;
+			break;
+		case 3:
+			mins = 30;
+			break;
+		case 4:
+			mins = 40;
+			break;
+		default:
+			break;
+	}
+
+	switch(dest){
+		case 1:
+			gardenMinutes = mins;
+			break;
+		case 2:
+			tentMinutes = mins;
+			break;
+		default:
+			break;
+	}
 }

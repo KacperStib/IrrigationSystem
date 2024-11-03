@@ -2,18 +2,27 @@
 // SquareLine Studio version: SquareLine Studio 1.5.0
 // LVGL version: 8.3.11
 // Project name: test
+
 #define TENT_WATER_CMD 1
 #define TENT_AUT_CMD 2
 #define GARDEN_WATER_CMD 3
 #define GARDEN_AUT_CMD 4
 #ifndef _UI_EVENTS_H
 #define _UI_EVENTS_H
+
 extern uint8_t cmdToFunc;
+extern uint8_t section;
+extern uint8_t gardenMinutes;
+extern uint8_t tentMinutes;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 void checkCmdsGUI(uint8_t cmd);
+void scetionSelector(uint8_t sec);
+void timeSelector(uint8_t mins, uint8_t dest);
+
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif

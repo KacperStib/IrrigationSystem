@@ -9,6 +9,11 @@ uint32_t lastRain;
 
 bool isRain = 0;
 bool wateringCmd = 0;
+bool watering_en = false;
+bool automation = false;
+uint8_t section = 0;
+uint8_t duration = 0;
+uint8_t mapValves[4] = {10, 9, 8, 7};
 
 // set flag when rain is detected
 void IRAM_ATTR rain(){
@@ -17,6 +22,7 @@ void IRAM_ATTR rain(){
 
 void openValve(uint8_t VALVE);
 void wateringSequence();
+void sectionSelector(uint8_t sec);
 void pinCfg();
 
 void setup() {
@@ -43,8 +49,25 @@ void loop() {
 
   // check if there are new msgs 
   wateringCmd = msgRx.onOff;
-  if (wateringCmd){
+  section = msgRx.section;
+  automation = msgRx.autom;
+  duration = msgRx.duration;
+
+  if (automation){
     wateringSequence();
+    automation = false;
+    msgRx.autom = false;
+  }
+  if (wateringCmd && !watering_en){
+    digitalWrite(mapValves[section - 1], LOW);
+    watering_en = true;
+  }
+  else if (!wateringCmd && watering_en){
+    digitalWrite(mapValves[section - 1], HIGH);
+    watering_en = false;
+    msgTx.seqEnd = true;
+    sendCommand(panel, msgTx);
+    msgTx.seqEnd = false;
   }
 
   delay(500);
@@ -73,7 +96,7 @@ void openValve(uint8_t VALVE){
   lastMillis = millis();
   digitalWrite(VALVE, LOW);
   // adjust watering time
-  while(millis() - lastMillis <= WATERING_TIME * 100){ //ma byc 1000 * 60
+  while(millis() - lastMillis <= duration * 100){
     delay(1000);
   }
   digitalWrite(VALVE, HIGH);
@@ -86,7 +109,7 @@ void wateringSequence(){
   openValve(VALVE3);
   openValve(VALVE4);
   // send msg to panel that watering has ended
-  msgTx.seqEnd = 1;
+  msgTx.seqEnd = true;
   sendCommand(panel, msgTx);
-  msgTx.seqEnd = 0;
+  msgTx.seqEnd = false;
 }

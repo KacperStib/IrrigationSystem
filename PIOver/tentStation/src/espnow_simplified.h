@@ -4,6 +4,7 @@
 struct msgNamiotRx {
   bool onOff;
   bool autom;
+  uint8_t duration;
 };
 
 struct msgNamiotTx {

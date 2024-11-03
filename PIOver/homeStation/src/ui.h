@@ -24,6 +24,7 @@ extern "C" {
 
 #include "ui_helpers.h"
 #include "ui_events.h"
+
 // SCREEN: ui_MainMenu
 void ui_MainMenu_screen_init(void);
 extern lv_obj_t * ui_MainMenu;
@@ -44,6 +45,7 @@ extern lv_obj_t * ui_Lux;
 extern lv_obj_t * ui_Preasure;
 extern lv_obj_t * ui_Time;
 extern lv_obj_t * ui_Date;
+extern lv_obj_t * ui_Error;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_TempOut;
 
@@ -65,6 +67,10 @@ extern lv_obj_t * ui_cmdG;
 extern lv_obj_t * ui_LastWateringG;
 extern lv_obj_t * ui_LastRain;
 extern lv_obj_t * ui_RainFall;
+void ui_event_section(lv_event_t * e);
+extern lv_obj_t * ui_section;
+void ui_event_timeGarden(lv_event_t * e);
+extern lv_obj_t * ui_timeGarden;
 // CUSTOM VARIABLES
 
 // SCREEN: ui_Tent
@@ -91,6 +97,8 @@ void ui_event_cmdT(lv_event_t * e);
 extern lv_obj_t * ui_cmdT;
 extern lv_obj_t * ui_SoilMoisBar;
 extern lv_obj_t * ui_WaterLvlBar;
+void ui_event_timeTent(lv_event_t * e);
+extern lv_obj_t * ui_timeTent;
 // CUSTOM VARIABLES
 
 // EVENTS

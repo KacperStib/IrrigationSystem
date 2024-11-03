@@ -8,12 +8,11 @@
 
 extern bool newN;
 extern bool newT;
-extern bool cmdT;
-extern bool cmdN;
 
 struct msgNamiotTx {
   bool onOff;
   bool autom;
+  uint8_t duration;
 };
 
 struct msgNamiotRx {
@@ -32,6 +31,9 @@ struct msgNamiotRx {
 
 struct msgTrawnikTx {
   bool onOff;
+  uint8_t section;
+  bool autom;
+  uint8_t duration;
 };
 
 struct msgTrawnikRx {
