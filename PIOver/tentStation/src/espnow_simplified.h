@@ -17,6 +17,8 @@ struct msgNamiotTx {
   uint8_t probe1;
   uint8_t probe2;
   uint8_t probe3;
+  uint8_t probesAvg;
+  uint16_t preasure;
   bool onOff;
   bool seqEnd;
 };

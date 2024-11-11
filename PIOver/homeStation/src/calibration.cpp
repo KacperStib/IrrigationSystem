@@ -8,6 +8,7 @@ static const uint16_t screenHeight = 320;
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t buf[ screenWidth * screenHeight / 10 ];
 
+// function to flush display
 void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p )
 {
     uint32_t w = ( area->x2 - area->x1 + 1 );
@@ -21,6 +22,7 @@ void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *
     lv_disp_flush_ready( disp_drv );
 }
 
+// function to read touch
 void my_touchpad_read( lv_indev_drv_t * indev_drv, lv_indev_data_t * data )
 {
     uint16_t touchX, touchY;
@@ -48,9 +50,10 @@ void my_touchpad_read( lv_indev_drv_t * indev_drv, lv_indev_data_t * data )
     }
 }
 
+// initialize lvgl library
 void init_lvgl(){
 
-  lv_init();
+    lv_init();
     lv_disp_draw_buf_init( &draw_buf, buf, NULL, screenWidth * screenHeight / 10 );
 
     /*Initialize the display*/
@@ -63,7 +66,7 @@ void init_lvgl(){
     disp_drv.draw_buf = &draw_buf;
     lv_disp_drv_register( &disp_drv );
 
-    /*Initialize the (dummy) input device driver*/
+    /*Initialize the input device driver*/
     static lv_indev_drv_t indev_drv;
     lv_indev_drv_init( &indev_drv );
     indev_drv.type = LV_INDEV_TYPE_POINTER;
@@ -73,6 +76,7 @@ void init_lvgl(){
     ui_init();
 }
 
+// initialize tft - eTFT library
 void init_tft(){
   // initialize TFT screen
   tft.begin();

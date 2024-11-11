@@ -5,10 +5,12 @@ msgNamiotTx msgTx;
 
 uint8_t panel[6] = {0x34, 0xB7, 0xDA, 0xF8, 0xC1, 0xC8};
 
+// copy data to struct on receive
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
   memcpy(&msgRx, incomingData, sizeof(msgRx));
 }
 
+// esp now initialization
 void espnow_init(){
   WiFi.mode(WIFI_STA);
   if (esp_now_init() != ESP_OK) {
@@ -18,6 +20,7 @@ void espnow_init(){
   esp_now_register_recv_cb(OnDataRecv);
 }
 
+// initialize peer
 void addPeer(uint8_t device[]){
   esp_now_peer_info_t peerInfo;
   peerInfo.channel = 0;  
@@ -27,6 +30,7 @@ void addPeer(uint8_t device[]){
   esp_now_add_peer(&peerInfo);
 }
 
+// send command to home station
 void sendCommand(uint8_t* device, struct msgNamiotTx commandData) {
   esp_now_send(device, (uint8_t *)&commandData, sizeof(commandData));
 }

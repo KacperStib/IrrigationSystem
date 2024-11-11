@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-#define PROBE1 2
+#define PROBE1 0
 #define PROBE2 1
-#define PROBE3 0
+#define PROBE3 3
 
-float measurement(uint8_t PROBE);
+float measure(uint8_t PROBE);
 float calculateAverage();

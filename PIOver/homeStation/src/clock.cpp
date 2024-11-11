@@ -2,6 +2,7 @@
 
 Bonezegei_DS1307 rtc(0x68);
 char buf[50];
+uint8_t lastMin = 0;
 
 // try to run clock on registers instead of libaray
 /*
@@ -17,10 +18,13 @@ void setFormat(uint8_t format, uint8_t AMPM){
 
 // set RTC based on CompileTime if RTC has to be adjust
 void setRTC(){
-  //using namespace CompileTime;
+  using namespace CompileTime;
   
+  // start RTC
   rtc.begin();
   rtc.setFormat(24);        //Set 12 Hours Format
+
+  // set RTC
   //rtc.setAMPM(1);           //Set AM or PM    0 = AM  1 =PM
   //sprintf(buf, "%02d:%02d:%02d", hour, minute, second);
   //rtc.setTime(buf);  //Set Time    Hour:Minute:Seconds
@@ -30,25 +34,18 @@ void setRTC(){
 
 // print time in serialport and on screen
 void printTime(){
-  //static uint32_t printTime = millis();
-  //if ((millis() - printTime) >= 1000) {
-    //printTime = millis();
-    if (rtc.getTime()) {
-      Serial.printf("Time %02d:%02d:%02d ", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
-      if (rtc.getFormat() == 12) {  // returns 12 or 24 hour format
-        if (rtc.getAMPM()) {  //return 0 = AM  1 = PM
-          Serial.print("PM  ");
-        } else {
-          Serial.print("AM  ");
-        }
-      }
-    }
-    Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDay(), (uint16_t) rtc.getYear() + 2000);
-  
-  sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
-  lv_label_set_text(ui_Time, buf);
+  if (rtc.getTime()) {
+    // debug
+    // Serial.printf("Time %02d:%02d:%02d ", rtc.getHour(), rtc.getMinute(), rtc.getSeconds());
+    // Serial.printf("Date %02d-%02d-%d \n", rtc.getMonth(), rtc.getDay(), (uint16_t) rtc.getYear() + 2000);
+    
+    // display date and time on screen
+    if (rtc.getMinute() != lastMin){
+      sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
+      lv_label_set_text(ui_Time, buf);
 
-  sprintf(buf, "%02d . %02d . %d", rtc.getMonth(), rtc.getDay(), (uint16_t) rtc.getYear() + 1920);
-  lv_label_set_text(ui_Date, buf);
-  //}
+      sprintf(buf, "%02d . %02d . %d", rtc.getDate(), rtc.getMonth(), (uint16_t) rtc.getYear() + 1920);
+      lv_label_set_text(ui_Date, buf);
+    }
+  }
 }

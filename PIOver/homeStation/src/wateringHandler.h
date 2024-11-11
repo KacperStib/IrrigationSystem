@@ -10,6 +10,8 @@ extern bool autoTent;
 extern bool autoGarden;
 extern bool sendTent;
 extern bool sendGarden;
+extern bool isWateringTent;
+extern bool isWateringGarden;
 
 // [0] - day   [1] - hour
 extern uint8_t lastTentWatering[2];

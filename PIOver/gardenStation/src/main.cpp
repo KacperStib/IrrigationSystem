@@ -13,13 +13,14 @@ bool watering_en = false;
 bool automation = false;
 uint8_t section = 0;
 uint8_t duration = 0;
-uint8_t mapValves[4] = {10, 9, 8, 7};
+uint8_t mapValves[4] = {5, 6, 7, 10};
 
 // set flag when rain is detected
 void IRAM_ATTR rain(){
   isRain = 1;
 }
 
+// functions declarations
 void openValve(uint8_t VALVE);
 void wateringSequence();
 void sectionSelector(uint8_t sec);
@@ -36,13 +37,8 @@ void loop() {
 
   // if rain detected send to panel and write timestamp
   if(isRain){
-    detachInterrupt(RAIN_SENSOR);
-    int read = analogRead(RAIN_SENSOR);
-    if (read > 2200){
-      msgTx.isRain = isRain;
-      sendCommand(panel, msgTx);
-      lastRain = millis();
-    }
+    msgTx.isRain = isRain;
+    sendCommand(panel, msgTx);
     isRain = 0;
     msgTx.isRain = isRain;
   }
@@ -53,17 +49,20 @@ void loop() {
   automation = msgRx.autom;
   duration = msgRx.duration;
 
+  // automatic scenario
   if (automation){
     wateringSequence();
     automation = false;
     msgRx.autom = false;
   }
+
+  // manual scenario
   if (wateringCmd && !watering_en){
-    digitalWrite(mapValves[section - 1], LOW);
+    digitalWrite(mapValves[section - 1], HIGH);
     watering_en = true;
   }
   else if (!wateringCmd && watering_en){
-    digitalWrite(mapValves[section - 1], HIGH);
+    digitalWrite(mapValves[section - 1], LOW);
     watering_en = false;
     msgTx.seqEnd = true;
     sendCommand(panel, msgTx);
@@ -82,10 +81,10 @@ void pinCfg(){
   pinMode(RAIN_SENSOR, INPUT);
 
   // write HIGH to close RELAY
-  digitalWrite(VALVE1, HIGH);
-  digitalWrite(VALVE2, HIGH);
-  digitalWrite(VALVE3, HIGH);
-  digitalWrite(VALVE4, HIGH);
+  // digitalWrite(VALVE1, HIGH);
+  // digitalWrite(VALVE2, HIGH);
+  // digitalWrite(VALVE3, HIGH);
+  // digitalWrite(VALVE4, HIGH);
 
   // attach interrupt to detect rain
   attachInterrupt(RAIN_SENSOR, rain, RISING);
@@ -94,12 +93,12 @@ void pinCfg(){
 // procedure to open one valve
 void openValve(uint8_t VALVE){
   lastMillis = millis();
-  digitalWrite(VALVE, LOW);
+  digitalWrite(VALVE, HIGH);
   // adjust watering time
   while(millis() - lastMillis <= duration * 100){
     delay(1000);
   }
-  digitalWrite(VALVE, HIGH);
+  digitalWrite(VALVE, LOW);
 }
 
 // procedure of watering whole garden

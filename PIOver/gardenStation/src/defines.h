@@ -1,9 +1,9 @@
 // pinout
-#define VALVE1 10
-#define VALVE2 9
-#define VALVE3 8
-#define VALVE4 7
-#define RAIN_SENSOR 4
+#define VALVE1 5
+#define VALVE2 6
+#define VALVE3 7
+#define VALVE4 10
+#define RAIN_SENSOR 0
 
 // in minutes
 #define WATERING_TIME 10

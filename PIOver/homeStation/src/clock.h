@@ -14,6 +14,7 @@
 
 extern Bonezegei_DS1307 rtc;
 extern char buf[50];
+extern uint8_t lastMin;
 
 void setRTC();
 void printTime();

@@ -7,19 +7,22 @@
 
 uint8_t cmdToFunc = 0;
 uint8_t section = 1;
-uint8_t gardenMinutes = 30;
-uint8_t tentMinutes = 30
-;
+uint8_t gardenMinutes = 15;
+uint8_t tentMinutes = 15;
+
+// assign command nr to global var
 void checkCmdsGUI(uint8_t cmd)
 {
     cmdToFunc = cmd;
 }
 
+// assign section nr to global var
 void scetionSelector(uint8_t sec)
 {
 	section = sec + 1;
 }
 
+// choose watering time and destination
 void timeSelector(uint8_t mins, uint8_t dest)
 {
 	switch(mins){
