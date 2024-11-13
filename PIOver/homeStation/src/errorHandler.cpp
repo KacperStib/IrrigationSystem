@@ -2,7 +2,7 @@
 
 uint8_t err = 0;
 
-// check if there are any error and set/clear error bit
+// sprawdz stan bledow, jesli wystapil ustaw odpowiedni BIT, jesli zniknal - wyczysc BIT
 void errorChecker(){
     if (msgNRx.waterLvl < 20){
         bitSet(err, LOW_WATER_LVL);
@@ -26,7 +26,7 @@ void errorChecker(){
     }
 }
 
-// display error msg on screen
+// wyswietlanie errorow na ekranie
 void errorHandler(){
     if (bitRead(err, LOW_WATER_LVL)){
         lv_label_set_text(ui_Error, "Niski poziom wody w zbiorniku !");

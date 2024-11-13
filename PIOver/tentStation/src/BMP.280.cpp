@@ -5,19 +5,21 @@ uint16_t ucalibDig[2];
 int16_t calibDig[12];
 int32_t tFine;
 
-// initialize BMP normal mode, high sampling andfilter
+// inicjalizacja BMP280 - tryb normalny, wysokie probkowanie i filtr
 void BMPinit(){
   I2CwriteVAL(0x76, BMP280_REGISTER_CONTROL, (MODE_NORMAL | (SAMPLING_X16 << 2) | (SAMPLING_X16 << 5)));
   I2CwriteVAL(0x76, BMP280_REGISTER_CONFIG, ((FILTER_X16 << 2) | (STANDBY_MS_05 << 5)));
   readCoefs();
 }
 
-// read TFine to calculate preassure (but dont need to calculate whole temperature)
+// odczyt TFine do dalszych kalkulacji cisnienia (nie trzeba odczytywac calej temperatury)
 void readTFine(){
   int32_t var1, var2;
   uint8_t buf[3];
   I2CwriteREG(0x76, BMP280_REGISTER_TEMPDATA);
   I2Cread(0x76, buf, 3);
+
+  // wzory z dokumentacji
   int32_t adc_T = int32_t(buf[0]) << 16 | uint32_t(buf[1]) << 8 | uint32_t(buf[2]);
   adc_T >>= 4;
 
@@ -28,7 +30,7 @@ void readTFine(){
   tFine = var1 + var2;
 }
 
-// readCoefs for Tfine and preasure calculations
+// odczytaj wspolczynniki - zgodnie z dokumentacja
 void readCoefs(){
   uint8_t buf[2];
   uint16_t temp;
@@ -49,6 +51,7 @@ void readCoefs(){
   calibDig[2] = int16_t ((temp >> 8) | (temp << 8));
 
   //////////////////////////////////////////////////////////////////////////////////
+
   I2CwriteREG(0x76, BMP280_REGISTER_DIG_P1);
   I2Cread(0x76, buf, 2);
   temp = uint16_t(buf[0]) << 8 | uint16_t(buf[1]);
@@ -95,13 +98,15 @@ void readCoefs(){
   calibDig[11] = int16_t ((temp >> 8) | (temp << 8));
 }
 
-// read and calculate preasure based on datasheet
+// odczytaj cisnienie i oblicz z wykorzystaniem TFine i wspolczynnikow
 float readPreasure(){
   int64_t var1, var2, p;
   readTFine();
   uint8_t buf[3];
   I2CwriteREG(0x76, BMP280_REGISTER_PRESSUREDATA);
   I2Cread(0x76, buf, 3);
+
+  // wzory z dokumentacji
   int32_t adc_P = int32_t(buf[0]) << 16 | uint32_t(buf[1]) << 8 | uint32_t(buf[2]);
   adc_P >>= 4;
 
@@ -113,7 +118,7 @@ float readPreasure(){
   var1 =(((((int64_t)1) << 47) + var1)) * ((int64_t)ucalibDig[1]) >> 33;
 
   if (var1 == 0) {
-    return 0; // avoid exception caused by division by zero
+    return 0; 
   }
 
   p = 1048576 - adc_P;
@@ -123,6 +128,6 @@ float readPreasure(){
 
   p = ((p + var1 + var2) >> 8) + (((int64_t)calibDig[9]) << 4);
 
-  // division by 100 to aqcuire hPa instead of raw Pa
+  // podziel na 100 aby uzyskac hPa a nie Pa
   return (float)p / 25600;
 }

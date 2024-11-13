@@ -1,6 +1,6 @@
 #include "HCSR04.h"
 
-// adjust tank height
+// dostosowac wysokosc zbiornika
 uint8_t tankHeight = 100;
 
 // set IOs
@@ -9,7 +9,7 @@ void HCSR04init(){
   pinMode(ECHO, INPUT);
 }
 
-// read distance - standard HC-SR04 procedure
+// odczyt odleglosci - standardowa procedura HCSR04
 uint8_t distance(){
 
   digitalWrite(TRIG, LOW);
@@ -23,7 +23,7 @@ uint8_t distance(){
   return (uint8_t)Distance;
 }
 
-// calculate water height (in %) based on declared tank height
+// obliczanie wysokosci poziomu wody w [%] na podstawie wysokosci zbiornika
 uint8_t waterPercentage(){
   float percent = (float) (100.0 - (float)distance() / tankHeight * 100.0);
   return (uint8_t)percent;

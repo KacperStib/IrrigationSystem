@@ -38,48 +38,49 @@ void wateringTask(void *pvParameters){
 void setup() {
   Serial.begin(9600);
   
-  // initialize I2C communication
+  // inicjalizacja komunikacji I2C
   if(!I2Cinit())
     Serial.println("I2C init OK");
   else
     Serial.println("I2C INIT ERROR");
 
-  // config sensors if needed
+  // konfiguracja sensorow
   TSLconfig();
   HCSR04init();
   BMPinit();
 
-  // init esp now and add peer
+  // inicjalizacja ESP_NOW i dodanie polaczenia
   espnow_init();
   addPeer(panel);
 
   // pin config
   pinMode(VALVE, OUTPUT);
 
-  // measure - 10 S
+  // pomiar z sensorow - 10S
   xTaskCreate(measurementTask, "MeasurementTask", 4096, NULL, 2, NULL);
 
-  // handle watering - 1S
+  // oblsuga nawadniania - 1S
   xTaskCreate(wateringTask, "WateringTask", 2048, NULL, 1, NULL);
 }
 
 void loop() {
+  // chill
 }
 
-// measure and prepare to send
+// pomiar oraz przygotowanie do wysylki
 void measurement(){
   //TSL - lux
   lux = TSLreadLux();
   //Serial.printf("Lux TSL2591: %f\n", lux);
   msgTx.lux = lux;
 
-  //SHT41 - Inside
+  //SHT41 - temp i wilgotnosc wewnatrz
   SHT41measurment(&tIn, &rhIn);
   //Serial.printf("SHT41: T: %f RH: %f\n", tIn, rhIn);
   msgTx.tempInside = tIn;
   msgTx.rhInside = rhIn;
 
-  //SHT31 - Outside
+  //SHT31 - temp i wilgotnosc na zewwnatrz
   SHT31heaterEnable();
   vTaskDelay(500 / portTICK_PERIOD_MS);
   SHT31heaterDisable();
@@ -89,7 +90,7 @@ void measurement(){
   msgTx.tempOutside = tOut;
   msgTx.rhOutside = rhOut;
 
-  //PROBES
+  // wilgotnosc gleby
   p1 = measure(PROBE1);
   p2 = measure(PROBE2);
   p3 = measure(PROBE3);
@@ -100,27 +101,27 @@ void measurement(){
   msgTx.probe3 = p3;
   msgTx.probesAvg = average;
 
-  //WATER LEVEL
+  // poziom wody w zbiorniku
   waterLvl = waterPercentage();
   //Serial.printf("Distance: %d, Level: %d %\n", distance(), waterLvl);
   msgTx.waterLvl = waterLvl;
 
-  // PREASURE
+  // cisnienie
   preasure = readPreasure();
   msgTx.preasure = preasure;
   
-  // send command to panel
+  // wyslij informacje do panela
   sendCommand(panel, msgTx);
 }
 
-// watering procedure
+// procedura do nawdaniania
 void watering(){
-  // assign received command to local variable
+  // przypisz komendy z wiadomosci do zmiennych globalnych
   wateringCmd = msgRx.onOff;
   automation = msgRx.autom;
   duration = msgRx.duration;
 
-  // manual scenario
+  // scenariusz manulany
   if (wateringCmd && !watering_en){
     digitalWrite(VALVE, HIGH);
     watering_en = true;
@@ -133,7 +134,7 @@ void watering(){
     msgTx.seqEnd = false;
   }
 
-  // automatic scenario
+  // scenatriusz automatyczny
   if(automation){
     wateringSequence();
     automation = false;
@@ -141,7 +142,7 @@ void watering(){
   }
 }
 
-// automatic sequence
+// sekwencja automatycznego nawadniania
 void wateringSequence(){
   lastMillis = millis();
   digitalWrite(VALVE, HIGH);

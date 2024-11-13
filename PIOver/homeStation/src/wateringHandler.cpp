@@ -9,15 +9,15 @@ bool sendGarden = false;
 bool isWateringTent = false;
 bool isWateringGarden = false;
 
-// store last watering and rain days[0] + hours[1]
+// informacje o ostanich zdarzeniach [0] - dzien, [1] - godzina
 uint8_t lastTentWatering[2] = {0, 0};
 uint8_t lastGardenWatering[2] = {0, 0};
 uint8_t lastRain[2] = {0, 0};
 
-// check command from GUI
+// sprawdz komendy wybrane przez uzytkowanika
 void checkCmds()
 {   
-    // simple ON / OFF
+    // ON / OFF
     switch(cmdToFunc){
       case TENT_WATER_CMD:
         cmdN = !cmdN;
@@ -26,7 +26,7 @@ void checkCmds()
         cmdToFunc = 0;
         break;
       
-      // if auto - handled by autoCmdsSender(), else turn off auto
+      // obsluga trybu automatycznego przez autoCmdsSender() lub wylaczenie ponizej
       case TENT_AUT_CMD:
         autoTent = !autoTent;
         if (!autoTent){
@@ -37,7 +37,7 @@ void checkCmds()
         cmdToFunc = 0;
         break;
 
-      // simple ON / OFF
+      // ON / OFF
       case GARDEN_WATER_CMD:
         cmdT = !cmdT;
         msgTTx.onOff = cmdT;
@@ -46,7 +46,7 @@ void checkCmds()
         cmdToFunc = 0;
         break;
 
-       // if auto - handled by autoCmdsSender(), else turn off auto
+       // obsluga trybu automatycznego przez autoCmdsSender() lub wylaczenie ponizej
       case GARDEN_AUT_CMD:
         autoGarden = !autoGarden;
         if (!autoGarden){
@@ -62,11 +62,12 @@ void checkCmds()
     }
 }
 
-// handle automatic watering
+// oblsuga trybu automatycznego
 void autoCmdsSender(){
-    // tent automation
+    // automatyzacja namiotu
     if (autoTent && !isWateringTent){
         // send only if 1. HOUR OK  OR 2. SOIL MOISTURE IS LOW
+        // wyslij jesli 1. godzina podlewania LUB 2. niski poziom wilgotnosci gleby
         if (((rtc.getHour() == 8 || rtc.getHour() == 20) && (lastTentWatering[1] != rtc.getHour() || (lastTentWatering[0] != rtc.getDay() && lastTentWatering[1] == rtc.getHour()))) 
             /*|| msgNRx.probe1 < 50 || msgNRx.probe2 < 50 || msgNRx.probe3 < 50*/){
             sendTent = true;
@@ -80,9 +81,9 @@ void autoCmdsSender(){
         }
     } 
 
-    // garden automation
+    // automatyzacja ogrodu
     if (autoGarden && isWateringGarden){
-        // send only if 1. HOUR OK AND 2. NO RAIN IN LAST X HOURS
+        // wyslij jesli 1. godzina podlewania ORAZ 2. nie bylo deszczu
         if (((rtc.getHour() == 8 || rtc.getHour() == 20) && (lastGardenWatering[1] != rtc.getHour() || (lastGardenWatering[0] != rtc.getDay() && lastGardenWatering[1] == rtc.getHour())))){
             sendGarden = true;
         }

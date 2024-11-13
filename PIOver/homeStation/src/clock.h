@@ -2,7 +2,6 @@
 #include <Bonezegei_DS1307.h>
 #include "CompileTime.h"  
 #include "calibration.h"
-#include "I2C.h"
 
 #define DS1307_ADRESS 0x68
 

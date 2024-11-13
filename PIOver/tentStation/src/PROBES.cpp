@@ -1,6 +1,6 @@
 #include "PROBES.h"
 
-// measure voltage on probe and scale to [%]
+// pomiar ADC na pinach esp32 oraz ich zamiana na %
 // esp32 C3 analog read 0 - 4095 -> 0.0 V - 3.3 V
 float measure(uint8_t PROBE){
   float meas = analogRead(PROBE) / 4095.0;
@@ -8,9 +8,9 @@ float measure(uint8_t PROBE){
   return val;
 }
 
-// calculate average - not used
+// obliczanie sredniej
 float calculateAverage(){
-  // increment counter only if measurement > 0, if not no sensor is connected
+  // licznik inkrementowany tylko gdy pomiar > 0 , jesli == 0 to znaczy ze czujnik nie jest podlaczony lub wystapila awaria
   uint8_t ctr = 0;
   float avg = 0;
 

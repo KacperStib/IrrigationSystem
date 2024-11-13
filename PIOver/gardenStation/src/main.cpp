@@ -15,12 +15,12 @@ uint8_t section = 0;
 uint8_t duration = 0;
 uint8_t mapValves[4] = {5, 6, 7, 10};
 
-// set flag when rain is detected
+// ustaw flage gdy spadnie deszcz
 void IRAM_ATTR rain(){
   isRain = 1;
 }
 
-// functions declarations
+// deklaracja funkcji
 void openValve(uint8_t VALVE);
 void wateringSequence();
 void sectionSelector(uint8_t sec);
@@ -35,7 +35,7 @@ void setup() {
 
 void loop() {
 
-  // if rain detected send to panel and write timestamp
+  // jesli wykrytu deszcz wyslij informacje do panelu i wyczysc flage
   if(isRain){
     msgTx.isRain = isRain;
     sendCommand(panel, msgTx);
@@ -43,20 +43,20 @@ void loop() {
     msgTx.isRain = isRain;
   }
 
-  // check if there are new msgs 
+  // sprawdz nowe wiadomosci i przypisz do zmiennych globalnych
   wateringCmd = msgRx.onOff;
   section = msgRx.section;
   automation = msgRx.autom;
   duration = msgRx.duration;
 
-  // automatic scenario
+  // scenariusz automatyczny
   if (automation){
     wateringSequence();
     automation = false;
     msgRx.autom = false;
   }
 
-  // manual scenario
+  // scenariusz manualny
   if (wateringCmd && !watering_en){
     digitalWrite(mapValves[section - 1], HIGH);
     watering_en = true;
@@ -73,41 +73,35 @@ void loop() {
 }
 
 void pinCfg(){
-  // set IOs
+  // ustaw piny IO
   pinMode(VALVE1, OUTPUT);
   pinMode(VALVE2, OUTPUT);
   pinMode(VALVE3, OUTPUT);
   pinMode(VALVE4, OUTPUT);
   pinMode(RAIN_SENSOR, INPUT);
 
-  // write HIGH to close RELAY
-  // digitalWrite(VALVE1, HIGH);
-  // digitalWrite(VALVE2, HIGH);
-  // digitalWrite(VALVE3, HIGH);
-  // digitalWrite(VALVE4, HIGH);
-
-  // attach interrupt to detect rain
+  // ustaw przerwanie do detekcji deszczu
   attachInterrupt(RAIN_SENSOR, rain, RISING);
 }
 
-// procedure to open one valve
+// procedura otwarcia pojedynczego zaworu
 void openValve(uint8_t VALVE){
   lastMillis = millis();
   digitalWrite(VALVE, HIGH);
-  // adjust watering time
+  // do testow duration * 100, normalnie duration * 60000 (zamiana milisekund na minuty)
   while(millis() - lastMillis <= duration * 100){
     delay(1000);
   }
   digitalWrite(VALVE, LOW);
 }
 
-// procedure of watering whole garden
+// procedura nawadniania calego ogrodu
 void wateringSequence(){
   openValve(VALVE1);
   openValve(VALVE2);
   openValve(VALVE3);
   openValve(VALVE4);
-  // send msg to panel that watering has ended
+  // wyslij informacje do panelu jesli zakonczono
   msgTx.seqEnd = true;
   sendCommand(panel, msgTx);
   msgTx.seqEnd = false;

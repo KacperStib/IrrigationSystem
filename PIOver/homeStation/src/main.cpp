@@ -6,6 +6,7 @@
 
 char pc = '%';
 
+// deklaracja funkcji
 void checkMsgs();
 
 // freeRTOS tasks
@@ -50,29 +51,31 @@ void setup() {
   CompileTime::setCompileTime(6);
   Serial.begin(115200);
 
+  // inicjalizacja wyswietlacza
   init_tft();
   init_lvgl();
 
+  // inicjalizacja zegara RTC
   setRTC();
 
-  // initialize esp now and add peers
+  // inicjalizacja ESP_NOW oraz dodanie polaczen
   espnow_init();
   addPeer(trawnik);
   addPeer(namiot);
 
-  // refresh time - 10 S
+  // srpawdz czas - 10 S
   xTaskCreate(checkTimeTask, "CheckTimeTask", 2048, NULL, 1, NULL);
 
-  // check msgs - 10 S
+  // sprawdz wiadomosci - 10 S
   xTaskCreate(checkMsgsTask, "CheckMsgsTask", 4096, NULL, 2, NULL);
 
-  // check lvgl and gui commands - 20 MS
+  // odswiez wyswietlacz i sprawdz dane o nacisku - 20 MS
   xTaskCreate(lvglAndCmdsTask, "lvglAndCmdsTask", 4096, NULL, 3, NULL);
 
-  // send automatic cmds - 1 M
+  // obsluga trybu automatycznego - 1 M
   xTaskCreate(automationTask, "automationTask", 2048, NULL, 4, NULL);
 
-  // error handler - 10 S
+  // obsluga errorow - 10 S
   xTaskCreate(errorHandlerTask, "errorHandlerTask", 2048, NULL, 5, NULL);
 }
 
@@ -82,19 +85,22 @@ void loop() {
 void checkMsgs(){
  if(newT){
   /* TRAWNIK */
-  // rain info
+  // deszcz
   if(msgTRx.isRain){
     sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
     lv_label_set_text(ui_LastRain, buf);
+    // przechowuj informacje o ostatnim deszczu
     lastRain[0] = rtc.getDay();
     lastRain[1] = rtc.getHour();
   }
-  // watering info
+  // nawdanianie
   if(msgTRx.seqEnd){
     sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
     lv_label_set_text(ui_LastWateringG, buf);
+    // przechowuj informacje o ostatnim nawadnianiu
     lastGardenWatering[0] = rtc.getDay();
     lastGardenWatering[1] = rtc.getHour();
+    // ustaw flagi trybu automatycznego
     sendGarden = false;
     isWateringGarden = false;
   }
@@ -137,8 +143,10 @@ void checkMsgs(){
     if(msgNRx.seqEnd){
       sprintf(buf, "%02d:%02d", rtc.getHour(), rtc.getMinute());
       lv_label_set_text(ui_LastWateringT, buf);
+      // przechowuj informacje o ostatnim nawadnianiu
       lastTentWatering[0] = rtc.getDay();
       lastTentWatering[1] = rtc.getHour();
+      // ustaw flagi trybu automatycznego
       sendTent = false;
       isWateringTent = false;
     }
