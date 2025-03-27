@@ -1,4 +1,4 @@
-# Three Station Irrigation System
+# Three Stations Irrigation System
  The aim of the project is to automate a home garden irrigation system consisting of
  several sprinkler sections and a tent with vegetables, irrigated by a drip line. The project
  assumes the implementation of a system of three devices. The station in the tent is
